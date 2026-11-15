@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('New election')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <p class="breadcrumb"><a th:href="@{/admin}">Elections</a> / New election</p>
+    <h1>New election</h1>
+    <p class="lead">The election starts as a draft. You add candidates and eligible voters on the next page.</p>
+
+    <form th:action="@{/admin/elections}" th:object="${electionForm}" method="post" novalidate class="card form">
+        <div th:if="${#fields.hasAnyErrors()}" class="alert alert-error" role="alert" id="form-errors">
+            <strong>Error:</strong> The election was not saved. Correct the marked fields.
+        </div>
+        <div th:replace="~{admin/election-fields :: fields}"></div>
+        <div class="actions">
+            <button type="submit" class="btn btn-primary" id="save-election">Create draft election</button>
+            <a class="btn btn-secondary" th:href="@{/admin}">Cancel</a>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

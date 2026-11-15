@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage election')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container" th:with="election=${detail.overview.election}, phase=${detail.overview.phase}">
+    <p class="breadcrumb"><a th:href="@{/admin}">Elections</a> / Manage</p>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="title-row">
+        <h1 th:text="${election.title}">Election title</h1>
+        <span id="election-phase" th:attr="data-phase=${phase.name()}">
+            <span th:replace="~{fragments/layout :: phase(${phase})}"></span>
+        </span>
+    </div>
+    <p class="lead" th:text="${election.description}">Description</p>
+
+    <section class="card" aria-labelledby="status-title">
+        <h2 id="status-title">Status and schedule</h2>
+        <dl class="facts">
+            <div><dt>Voting opens</dt><dd th:text="${@displayTime.format(election.startsAt)}">start</dd></div>
+            <div><dt>Voting closes</dt><dd th:text="${@displayTime.format(election.endsAt)}">end</dd></div>
+            <div><dt>Eligible voters</dt><dd id="eligible-count" th:text="${detail.overview.eligibleCount}">0</dd></div>
+            <div><dt>Votes cast</dt><dd id="votes-cast" th:text="${detail.overview.participationCount}">0</dd></div>
+        </dl>
+        <p th:switch="${phase.name()}" class="notice">
+            <span th:case="'DRAFT'">This election is a draft. Voters cannot see it. It needs at least two candidates and an end time in the future before it can be activated.</span>
+            <span th:case="'SCHEDULED'">The election is activated. Voting starts automatically at the opening time. Details and candidates are locked.</span>
+            <span th:case="'VOTING'">Voting is open. Details and candidates are locked. Candidate totals stay hidden until voting ends.</span>
+            <span th:case="'ENDED'">The voting period is over: new votes are rejected and the results are published. Closing the election makes this final administratively.</span>
+            <span th:case="'CLOSED'">The election is closed. It cannot be reopened. The results are published.</span>
+        </p>
+        <div class="actions">
+            <form th:if="${detail.setupEditable}" th:action="@{/admin/elections/{id}/activate(id=${election.id})}" method="post">
+                <button type="submit" class="btn btn-primary" id="activate-election">Activate election</button>
+            </form>
+            <form th:if="${detail.closable}" th:action="@{/admin/elections/{id}/close(id=${election.id})}" method="post">
+                <button type="submit" class="btn btn-danger" id="close-election">Close election</button>
+            </form>
+            <a th:if="${detail.overview.resultsVisible}" class="btn btn-secondary" id="view-results"
+               th:href="@{/elections/{id}/results(id=${election.id})}">View results</a>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="candidates-title">
+        <h2 id="candidates-title">Candidates</h2>
+        <p th:if="${#lists.isEmpty(detail.candidates)}" class="empty-inline" id="no-candidates">No candidates yet. Add at least two.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(detail.candidates)}">
+            <table class="table" id="candidates-table">
+                <caption>Candidates in ballot order</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Statement</th>
+                    <th scope="col" th:if="${detail.setupEditable}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="candidate : ${detail.candidates}">
+                    <th scope="row" th:text="${candidate.name}">Name</th>
+                    <td th:text="${candidate.biography}">Statement</td>
+                    <td th:if="${detail.setupEditable}" class="row-actions">
+                        <form th:action="@{/admin/elections/{id}/candidates/{cid}/remove(id=${election.id}, cid=${candidate.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary btn-small"
+                                    th:attr="aria-label='Remove candidate ' + ${candidate.name}">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <form th:if="${detail.setupEditable}" th:action="@{/admin/elections/{id}/candidates(id=${election.id})}"
+              method="post" novalidate class="form form-inline" id="add-candidate-form">
+            <h3>Add a candidate</h3>
+            <div class="field-row">
+                <div class="field">
+                    <label for="candidate-name">Candidate name</label>
+                    <input type="text" id="candidate-name" name="name" maxlength="100">
+                </div>
+                <div class="field field-wide">
+                    <label for="candidate-biography">Statement <span class="optional">(optional)</span></label>
+                    <input type="text" id="candidate-biography" name="biography" maxlength="500">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary" id="add-candidate">Add candidate</button>
+        </form>
+    </section>
+
+    <section class="card" aria-labelledby="eligibility-title">
+        <h2 id="eligibility-title">Eligible voters</h2>
+        <p class="hint">Only voters marked as eligible can vote in this election. The "Voted" column shows participation
+            only, never the choice. Removing eligibility never removes a vote that was already accepted.</p>
+        <p th:if="${#lists.isEmpty(detail.voters)}" class="empty-inline">There are no voter accounts yet.
+            <a th:href="@{/admin/voters}">Create voter accounts</a>.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(detail.voters)}">
+            <table class="table" id="eligibility-table">
+                <caption>Voter accounts and their eligibility for this election</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Voter</th>
+                    <th scope="col">Account</th>
+                    <th scope="col">Eligibility</th>
+                    <th scope="col">Voted</th>
+                    <th scope="col" th:if="${detail.eligibilityManageable}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${detail.voters}" th:attr="data-voter=${row.voter.username}">
+                    <th scope="row">
+                        <span th:text="${row.voter.displayName}">Name</span>
+                        <span class="subtle" th:text="'(' + ${row.voter.username} + ')'">(username)</span>
+                    </th>
+                    <td th:text="${row.voter.enabled} ? 'Enabled' : 'Disabled'">Enabled</td>
+                    <td class="eligibility" th:text="${row.eligible} ? '&#10003; Eligible' : 'Not eligible'">Eligible</td>
+                    <td th:text="${row.hasVoted} ? '&#10003; Yes' : 'No'">No</td>
+                    <td th:if="${detail.eligibilityManageable}" class="row-actions">
+                        <form th:unless="${row.eligible}" method="post"
+                              th:action="@{/admin/elections/{id}/eligibility/{vid}/grant(id=${election.id}, vid=${row.voter.id})}">
+                            <button type="submit" class="btn btn-secondary btn-small"
+                                    th:attr="aria-label='Make ' + ${row.voter.username} + ' eligible'">Make eligible</button>
+                        </form>
+                        <form th:if="${row.eligible}" method="post"
+                              th:action="@{/admin/elections/{id}/eligibility/{vid}/revoke(id=${election.id}, vid=${row.voter.id})}">
+                            <button type="submit" class="btn btn-secondary btn-small"
+                                    th:attr="aria-label='Remove eligibility of ' + ${row.voter.username}">Remove eligibility</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card" th:if="${detail.setupEditable}" aria-labelledby="edit-title">
+        <h2 id="edit-title">Edit details and schedule</h2>
+        <form th:action="@{/admin/elections/{id}/update(id=${election.id})}" th:object="${electionForm}" method="post"
+              novalidate class="form">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-error" role="alert" id="form-errors">
+                <strong>Error:</strong> The changes were not saved. Correct the marked fields.
+            </div>
+            <div th:replace="~{admin/election-fields :: fields}"></div>
+            <button type="submit" class="btn btn-secondary" id="save-election">Save changes</button>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

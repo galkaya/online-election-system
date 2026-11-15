@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My elections')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h1>My elections</h1>
+    <p class="lead">Elections you are eligible for, and whether you have voted. Your choice is never shown here.</p>
+
+    <div th:if="${#lists.isEmpty(rows)}" class="empty-state" id="no-elections">
+        <h2>No elections available</h2>
+        <p>You are not on the eligibility list of any election right now. If you think this is a mistake,
+            contact the election administrator.</p>
+    </div>
+
+    <ul class="election-list" th:unless="${#lists.isEmpty(rows)}">
+        <li class="card election-card" th:each="row : ${rows}" th:attr="data-election-id=${row.election.id}">
+            <div class="election-card-head">
+                <h2 th:text="${row.election.title}">Election title</h2>
+                <span th:replace="~{fragments/layout :: phase(${row.phase})}"></span>
+            </div>
+            <p th:text="${row.election.description}">Description</p>
+            <dl class="facts">
+                <div><dt>Voting opens</dt><dd th:text="${@displayTime.format(row.election.startsAt)}">start</dd></div>
+                <div><dt>Voting closes</dt><dd th:text="${@displayTime.format(row.election.endsAt)}">end</dd></div>
+                <div>
+                    <dt>Your participation</dt>
+                    <dd class="participation">
+                        <span th:if="${row.hasVoted}" class="status status-done">&#10003; You have voted</span>
+                        <span th:if="${!row.hasVoted and row.phase.name() == 'VOTING'}" class="status status-pending">You have not voted yet</span>
+                        <span th:if="${!row.hasVoted and row.phase.name() == 'SCHEDULED'}" class="status status-pending">Voting has not started</span>
+                        <span th:if="${!row.hasVoted and row.resultsVisible}" class="status status-missed">You did not vote</span>
+                    </dd>
+                </div>
+            </dl>
+            <p th:if="${!row.eligible}" class="hint">Your eligibility for this election was withdrawn after you voted. Your accepted vote remains counted.</p>
+            <div class="actions">
+                <a th:if="${row.canVote}" class="btn btn-primary"
+                   th:href="@{/voter/elections/{id}/ballot(id=${row.election.id})}">Vote now</a>
+                <a th:if="${row.resultsVisible}" class="btn btn-secondary"
+                   th:href="@{/elections/{id}/results(id=${row.election.id})}">View results</a>
+                <span th:if="${row.phase.name() == 'VOTING' and row.hasVoted}" class="hint">Results are published when the election ends.</span>
+            </div>
+        </li>
+    </ul>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Vote not accepted')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <section class="card card-error" aria-labelledby="rejected-title">
+        <h1 id="rejected-title">Vote not accepted</h1>
+        <p class="lead" id="rejection-message" role="alert" th:attr="data-reason=${reason.name()}"
+           th:text="${reason.message()}">Reason</p>
+        <p>Nothing was recorded by this attempt. Votes that were accepted earlier are not affected.</p>
+        <div class="actions">
+            <a class="btn btn-primary" th:href="@{/voter}">Back to my elections</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

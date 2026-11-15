@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Review your choice')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <p class="breadcrumb"><a th:href="@{/voter}">My elections</a> / Ballot / Review</p>
+    <h1>Review your choice</h1>
+    <p class="lead" th:text="${ballot.election.title}">Election title</p>
+
+    <section class="card" aria-labelledby="chosen-title">
+        <h2 id="chosen-title">You selected</h2>
+        <p class="selected-candidate" id="selected-candidate" th:text="${selected.name}">Candidate name</p>
+        <p th:text="${selected.biography}">Statement</p>
+        <p class="notice"><strong>This is final.</strong> Your vote cannot be viewed or changed after you submit it.</p>
+        <form th:action="@{/voter/elections/{id}/vote(id=${ballot.election.id})}" method="post" class="actions">
+            <input type="hidden" name="candidateId" th:value="${selected.id}">
+            <button type="submit" class="btn btn-primary" id="submit-vote">Submit my vote</button>
+            <a class="btn btn-secondary" th:href="@{/voter/elections/{id}/ballot(id=${ballot.election.id})}">Change my choice</a>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

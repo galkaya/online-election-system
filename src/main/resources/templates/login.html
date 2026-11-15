@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sign in')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-narrow">
+    <section class="card" aria-labelledby="login-title">
+        <h1 id="login-title">Sign in</h1>
+        <p class="lead">Use your voter or administrator account.</p>
+
+        <div th:if="${param.error != null}" class="alert alert-error" role="alert" id="login-error">
+            <strong>Error:</strong> The username or password is incorrect, or the account is disabled.
+        </div>
+        <div th:if="${param.logout != null}" class="alert alert-success" role="status" id="logout-message">
+            <strong>Signed out:</strong> You have been signed out.
+        </div>
+        <div th:if="${param.disabled != null}" class="alert alert-error" role="alert" id="disabled-message">
+            <strong>Session ended:</strong> This account is no longer active. Contact the election administrator.
+        </div>
+
+        <form th:action="@{/login}" method="post" novalidate class="form">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" autocomplete="username" autocapitalize="none"
+                       spellcheck="false" autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="login-submit">Sign in</button>
+        </form>
+        <p class="hint">You can <a th:href="@{/receipt}">verify a confirmation code</a> without signing in.</p>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

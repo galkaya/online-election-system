@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ballot')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <p class="breadcrumb"><a th:href="@{/voter}">My elections</a> / Ballot</p>
+    <h1 th:text="${ballot.election.title}">Election title</h1>
+    <p class="lead" th:text="${ballot.election.description}">Description</p>
+    <p class="notice">You can vote only once in this election. After you submit your vote, you cannot view or change it.
+        Voting closes on <strong th:text="${@displayTime.format(ballot.election.endsAt)}">end</strong>.</p>
+
+    <div th:if="${selectionError}" class="alert alert-error" role="alert" id="selection-error">
+        <strong>Error:</strong> <span th:text="${selectionError}">Select one candidate.</span>
+    </div>
+
+    <form th:action="@{/voter/elections/{id}/review(id=${ballot.election.id})}" method="post" novalidate class="card">
+        <fieldset class="choices" th:attr="aria-describedby=${selectionError} ? 'selection-error' : null">
+            <legend>Choose one candidate</legend>
+            <div class="choice" th:each="candidate : ${ballot.candidates}">
+                <input type="radio" name="candidateId" th:id="'candidate-' + ${candidate.id}" th:value="${candidate.id}">
+                <label th:for="'candidate-' + ${candidate.id}">
+                    <span class="choice-name" th:text="${candidate.name}">Candidate name</span>
+                    <span class="choice-bio" th:text="${candidate.biography}">Statement</span>
+                </label>
+            </div>
+        </fieldset>
+        <div class="actions">
+            <button type="submit" class="btn btn-primary" id="review-choice">Review my choice</button>
+            <a class="btn btn-secondary" th:href="@{/voter}">Cancel</a>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

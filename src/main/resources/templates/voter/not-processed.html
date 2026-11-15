@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Vote not processed')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <section class="card card-error" aria-labelledby="not-processed-title">
+        <h1 id="not-processed-title">We could not process your vote</h1>
+        <p class="lead" role="alert">The system was busy and your vote was not recorded.</p>
+        <p>Open <a th:href="@{/voter}">My elections</a> and check your participation status. If it still says that you
+            have not voted, you can try again.</p>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

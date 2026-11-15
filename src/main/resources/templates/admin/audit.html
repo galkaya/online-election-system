@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Audit')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container">
+    <h1>Audit</h1>
+    <p class="lead">Administrative events, rejected vote attempts and record counts. Accepted votes are not logged
+        per voter, and no entry on this page contains a candidate choice or a confirmation code.</p>
+
+    <section class="card" aria-labelledby="integrity-title">
+        <h2 id="integrity-title">Record counts per election</h2>
+        <p class="hint">Every accepted vote creates exactly one participation record and one ballot in the same
+            database transaction, so the two counts must be equal.</p>
+        <p th:if="${#lists.isEmpty(elections)}" class="empty-inline">No elections yet.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(elections)}">
+            <table class="table" id="integrity-table">
+                <caption>Eligibility, participation, ballots and rejected attempts</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Election</th>
+                    <th scope="col">Phase</th>
+                    <th scope="col" class="num">Eligible voters</th>
+                    <th scope="col" class="num">Participation records</th>
+                    <th scope="col" class="num">Stored ballots</th>
+                    <th scope="col">Counts match</th>
+                    <th scope="col" class="num">Rejected attempts</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${elections}" th:attr="data-election-id=${row.election.id}">
+                    <th scope="row" th:text="${row.election.title}">Title</th>
+                    <td><span th:replace="~{fragments/layout :: phase(${row.phase})}"></span></td>
+                    <td class="num" th:text="${row.eligibleCount}">0</td>
+                    <td class="num participation-count" th:text="${row.participationCount}">0</td>
+                    <td class="num ballot-count" th:text="${row.ballotCount}">0</td>
+                    <td class="counts-match" th:text="${row.countsMatch} ? '&#10003; Yes' : '&#10007; No - investigate'">Yes</td>
+                    <td class="num rejected-count" th:text="${row.rejectedAttempts}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="events-title">
+        <h2 id="events-title">Event log</h2>
+        <p class="hint">The 200 most recent events, newest first.</p>
+        <p th:if="${#lists.isEmpty(events)}" class="empty-inline" id="no-events">No events have been recorded yet.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(events)}">
+            <table class="table" id="audit-table">
+                <caption>Administrative events and rejected vote attempts</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Event</th>
+                    <th scope="col">Account</th>
+                    <th scope="col" class="num">Election ID</th>
+                    <th scope="col">Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="event : ${events}" th:attr="data-event-type=${event.eventType.name()}">
+                    <td th:text="${@displayTime.format(event.occurredAt)}">time</td>
+                    <th scope="row" th:text="${event.eventType.label()}">Event</th>
+                    <td th:text="${event.actor} ?: '-'">actor</td>
+                    <td class="num" th:text="${event.electionId} ?: '-'">1</td>
+                    <td th:text="${event.detail}">detail</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

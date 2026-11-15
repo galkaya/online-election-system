@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Elections')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <div class="title-row">
+        <h1>Elections</h1>
+        <a class="btn btn-primary" id="new-election" th:href="@{/admin/elections/new}">New election</a>
+    </div>
+    <p class="lead">Create elections, manage candidates and eligible voters, and open or close voting.</p>
+
+    <div th:if="${#lists.isEmpty(elections)}" class="empty-state" id="no-elections">
+        <h2>No elections yet</h2>
+        <p>Create the first election to get started.</p>
+    </div>
+
+    <div class="table-wrap" th:unless="${#lists.isEmpty(elections)}">
+        <table class="table" id="elections-table">
+            <caption>All elections, newest voting window first</caption>
+            <thead>
+            <tr>
+                <th scope="col">Election</th>
+                <th scope="col">Phase</th>
+                <th scope="col">Voting window</th>
+                <th scope="col" class="num">Candidates</th>
+                <th scope="col" class="num">Eligible voters</th>
+                <th scope="col" class="num">Votes cast</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${elections}">
+                <th scope="row" th:text="${row.election.title}">Title</th>
+                <td><span th:replace="~{fragments/layout :: phase(${row.phase})}"></span></td>
+                <td>
+                    <span th:text="${@displayTime.format(row.election.startsAt)}">start</span><br>
+                    to <span th:text="${@displayTime.format(row.election.endsAt)}">end</span>
+                </td>
+                <td class="num" th:text="${row.candidateCount}">0</td>
+                <td class="num" th:text="${row.eligibleCount}">0</td>
+                <td class="num" th:text="${row.participationCount}">0</td>
+                <td class="row-actions">
+                    <a class="btn btn-secondary btn-small" th:href="@{/admin/elections/{id}(id=${row.election.id})}"
+                       th:attr="aria-label='Manage ' + ${row.election.title}">Manage</a>
+                    <a th:if="${row.resultsVisible}" class="btn btn-secondary btn-small"
+                       th:href="@{/elections/{id}/results(id=${row.election.id})}"
+                       th:attr="aria-label='Results of ' + ${row.election.title}">Results</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

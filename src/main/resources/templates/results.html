@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Results')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <p class="breadcrumb">
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/elections/{id}(id=${results.election.id})}">Election</a>
+        <a sec:authorize="hasRole('VOTER')" th:href="@{/voter}">My elections</a>
+        / Results
+    </p>
+    <div class="title-row">
+        <h1 th:text="${results.election.title}">Election title</h1>
+        <span th:replace="~{fragments/layout :: phase(${results.phase})}"></span>
+    </div>
+    <p class="lead">
+        <span th:if="${results.phase.name() == 'CLOSED'}">Final results. The election was closed by an administrator.</span>
+        <span th:if="${results.phase.name() == 'ENDED'}">Final results. The voting period ended on
+            <span th:text="${@displayTime.format(results.election.endsAt)}">end</span>.</span>
+    </p>
+
+    <div id="outcome" class="outcome" th:attr="data-outcome=${results.tally.outcome.name()}"
+         th:switch="${results.tally.outcome.name()}">
+        <p th:case="'WINNER'" class="alert alert-success" role="status">
+            <strong>Winner:</strong>
+            <span id="winner-name" th:text="${results.tally.leaders[0].name}">Name</span>
+            with <span th:text="${results.tally.leaders[0].votes}">0</span>
+            <span th:text="${results.tally.leaders[0].votes == 1} ? 'vote' : 'votes'">votes</span>.
+        </p>
+        <p th:case="'TIE'" class="alert alert-warning" role="status">
+            <strong>Tie:</strong>
+            <span id="tied-names" th:text="${#strings.listJoin(results.tally.leaders.![name], ', ')}">Names</span>
+            each received <span th:text="${results.tally.leaders[0].votes}">0</span>
+            <span th:text="${results.tally.leaders[0].votes == 1} ? 'vote' : 'votes'">votes</span>.
+            No winner is declared.
+        </p>
+        <p th:case="'NO_VOTES'" class="alert alert-warning" role="status">
+            <strong>No votes:</strong> No ballots were accepted in this election. No winner is declared.
+        </p>
+    </div>
+
+    <div class="table-wrap">
+        <table class="table" id="results-table">
+            <caption>Accepted votes per candidate, counted from the stored ballots</caption>
+            <thead>
+            <tr>
+                <th scope="col">Candidate</th>
+                <th scope="col" class="num">Votes</th>
+                <th scope="col" class="num">Share</th>
+                <th scope="col" aria-hidden="true"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${results.tally.rows}" th:attr="data-candidate=${row.name}">
+                <th scope="row" th:text="${row.name}">Candidate</th>
+                <td class="num votes" th:text="${row.votes}">0</td>
+                <td class="num" th:text="${#numbers.formatDecimal(row.percent, 1, 1)} + '%'">0.0%</td>
+                <td class="bar-cell" aria-hidden="true">
+                    <span class="bar"><span class="bar-fill" th:style="'width:' + ${row.percent} + '%'"></span></span>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th scope="row">Total accepted votes</th>
+                <td class="num" id="total-votes" th:text="${results.tally.totalVotes}">0</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <p class="hint">Eligible voters at the end: <span th:text="${results.eligibleCount}">0</span>. The table shows totals
+        only; individual choices are not stored with voter identities.</p>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Voters')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h1>Voters</h1>
+    <p class="lead">Fictional voter accounts for the simulation. Accounts are disabled, never deleted, so the
+        participation history stays intact.</p>
+
+    <section class="card" aria-labelledby="accounts-title">
+        <h2 id="accounts-title">Voter accounts</h2>
+        <p th:if="${#lists.isEmpty(voters)}" class="empty-inline" id="no-voters">No voter accounts yet.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(voters)}">
+            <table class="table" id="voters-table">
+                <caption>All voter accounts</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Display name</th>
+                    <th scope="col">Account status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="voter : ${voters}" th:attr="data-voter=${voter.username}">
+                    <th scope="row" th:text="${voter.username}">username</th>
+                    <td th:text="${voter.displayName}">Name</td>
+                    <td class="account-status" th:text="${voter.enabled} ? '&#10003; Enabled' : '&#10007; Disabled'">Enabled</td>
+                    <td class="row-actions">
+                        <form th:if="${voter.enabled}" th:action="@{/admin/voters/{id}/disable(id=${voter.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary btn-small"
+                                    th:attr="aria-label='Disable account ' + ${voter.username}">Disable</button>
+                        </form>
+                        <form th:unless="${voter.enabled}" th:action="@{/admin/voters/{id}/enable(id=${voter.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary btn-small"
+                                    th:attr="aria-label='Enable account ' + ${voter.username}">Enable</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="create-title">
+        <h2 id="create-title">Create a voter account</h2>
+        <form th:action="@{/admin/voters}" method="post" novalidate autocomplete="off" class="form" id="create-voter-form">
+            <div class="field-row">
+                <div class="field">
+                    <label for="voter-username">Username</label>
+                    <input type="text" id="voter-username" name="username" maxlength="50" autocapitalize="none"
+                           spellcheck="false" th:value="${enteredUsername}" aria-describedby="voter-username-hint">
+                    <p class="hint" id="voter-username-hint">3 to 50 characters: lower-case letters, digits, dots, dashes, underscores.</p>
+                </div>
+                <div class="field">
+                    <label for="voter-display-name">Display name</label>
+                    <input type="text" id="voter-display-name" name="displayName" maxlength="100" th:value="${enteredDisplayName}">
+                </div>
+                <div class="field">
+                    <label for="voter-password">Initial password</label>
+                    <input type="password" id="voter-password" name="password" maxlength="72" autocomplete="new-password"
+                           aria-describedby="voter-password-hint">
+                    <p class="hint" id="voter-password-hint">8 to 72 characters. Use fictional test passwords only.</p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="create-voter">Create voter account</button>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

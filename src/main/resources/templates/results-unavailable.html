@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Results not available')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <section class="card" aria-labelledby="unavailable-title">
+        <h1 id="unavailable-title">Results are not available yet</h1>
+        <p class="lead" id="results-unavailable" role="status">Results are published only after the election has ended
+            or has been closed. No totals are shown while voting is still possible.</p>
+        <div class="actions">
+            <a class="btn btn-primary" th:href="@{/}">Back to the start page</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

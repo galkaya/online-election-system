@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Vote recorded')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main" class="container container-medium">
+    <p class="breadcrumb"><a th:href="@{/voter}">My elections</a> / Confirmation</p>
+
+    <section th:if="${receiptCode}" class="card card-success" aria-labelledby="confirmation-title">
+        <h1 id="confirmation-title">&#10003; Your vote has been recorded</h1>
+        <p class="lead" th:text="${election.title}">Election title</p>
+        <h2>Your confirmation code</h2>
+        <p class="receipt-code" id="receipt-code" th:text="${receiptCode}">XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX</p>
+        <p class="notice"><strong>Save this code now.</strong> It is shown only once. It cannot be displayed again or
+            recovered, because the system does not keep a link between you and your ballot.</p>
+        <p>With this code you can check at any time that your ballot was accepted. The check never shows which
+            candidate you chose.</p>
+        <div class="actions">
+            <a class="btn btn-primary" th:href="@{/receipt}">Verify a code</a>
+            <a class="btn btn-secondary" th:href="@{/voter}">Back to my elections</a>
+        </div>
+    </section>
+
+    <section th:unless="${receiptCode}" class="card" aria-labelledby="participation-title">
+        <h1 id="participation-title">Your participation is recorded</h1>
+        <p class="lead" th:text="${election.title}">Election title</p>
+        <p id="code-unavailable">You have voted in this election. The confirmation code was shown once, right after
+            you voted, and cannot be displayed again.</p>
+        <div class="actions">
+            <a class="btn btn-secondary" th:href="@{/voter}">Back to my elections</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
