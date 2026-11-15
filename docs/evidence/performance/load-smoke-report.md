@@ -1,6 +1,6 @@
 # Local HTTP load smoke test
 
-Run at 2026-11-15T16:15:42-06:00 by `LoadSmokeIT` (`mvnw -Pperformance verify`).
+Run at 2026-11-15T16:20:39-06:00 by `LoadSmokeIT` (`mvnw -Pperformance verify`).
 
 This is a smoke test on one developer machine with client and server in the same JVM. It is not a benchmark, a capacity statement or a service-level claim.
 
@@ -41,10 +41,10 @@ Failed requests, if any, are excluded from this table and listed above instead.
 
 | Request | Count | p50 | p95 | max |
 |---|---|---|---|---|
-| POST /login (bcrypt check, new session) | 60 | 257.6 | 323.3 | 354.8 |
-| GET ballot page | 60 | 17.8 | 45.7 | 59.0 |
-| POST vote (accepted, 302) | 60 | 18.4 | 47.2 | 90.7 |
-| Whole voter flow (5 requests) | 60 | 432.0 | 505.8 | 565.6 |
-| POST vote (duplicate, 409, sequential) | 10 | 9.5 | 31.0 | 31.0 |
+| POST /login (bcrypt check, new session) | 60 | 256.8 | 321.5 | 336.5 |
+| GET ballot page | 60 | 19.1 | 50.7 | 77.2 |
+| POST vote (accepted, 302) | 60 | 20.5 | 81.8 | 136.4 |
+| Whole voter flow (5 requests) | 60 | 400.6 | 492.4 | 532.9 |
+| POST vote (duplicate, 409, sequential) | 10 | 7.2 | 25.0 | 25.0 |
 
-Measured phase wall-clock time: 2.20 s for 60 voters (27.2 completed voter flows per second at this concurrency).
+Measured phase wall-clock time: 2.13 s for 60 voters (28.2 completed voter flows per second at this concurrency).
