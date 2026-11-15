@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ElectionAdminService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.service</a> &gt; <span class="el_source">ElectionAdminService.java</span></div><h1>ElectionAdminService.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.service;
+
+import edu.comp5100.election.domain.AuditEventType;
+import edu.comp5100.election.domain.Candidate;
+import edu.comp5100.election.domain.Election;
+import edu.comp5100.election.domain.ElectionEligibility;
+import edu.comp5100.election.domain.Role;
+import edu.comp5100.election.domain.UserAccount;
+import edu.comp5100.election.policy.ActivationProblem;
+import edu.comp5100.election.policy.ElectionLifecyclePolicy;
+import edu.comp5100.election.repository.CandidateRepository;
+import edu.comp5100.election.repository.ElectionEligibilityRepository;
+import edu.comp5100.election.repository.ElectionRepository;
+import edu.comp5100.election.repository.UserAccountRepository;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Administrative changes to elections (FR-03 to FR-06). Every method that changes an existing
+ * election first takes the same election row lock that voting takes, then re-checks the rules.
+ * Each change and its audit record commit together.
+ */
+@Service
+public class ElectionAdminService {
+
+    private static final int TITLE_MAX = 120;
+    private static final int DESCRIPTION_MAX = 1000;
+    private static final int CANDIDATE_NAME_MAX = 100;
+    private static final int BIOGRAPHY_MAX = 500;
+
+    private final ElectionRepository electionRepository;
+    private final CandidateRepository candidateRepository;
+    private final ElectionEligibilityRepository eligibilityRepository;
+    private final UserAccountRepository userAccountRepository;
+    private final AuditService auditService;
+    private final Clock clock;
+
+    public ElectionAdminService(ElectionRepository electionRepository, CandidateRepository candidateRepository,
+            ElectionEligibilityRepository eligibilityRepository, UserAccountRepository userAccountRepository,
+<span class="fc" id="L44">            AuditService auditService, Clock clock) {</span>
+<span class="fc" id="L45">        this.electionRepository = electionRepository;</span>
+<span class="fc" id="L46">        this.candidateRepository = candidateRepository;</span>
+<span class="fc" id="L47">        this.eligibilityRepository = eligibilityRepository;</span>
+<span class="fc" id="L48">        this.userAccountRepository = userAccountRepository;</span>
+<span class="fc" id="L49">        this.auditService = auditService;</span>
+<span class="fc" id="L50">        this.clock = clock;</span>
+<span class="fc" id="L51">    }</span>
+
+    @Transactional
+    public Election createElection(String actor, String title, String description, Instant startsAt, Instant endsAt) {
+<span class="fc" id="L55">        String cleanTitle = requireText(title, TITLE_MAX, &quot;The title&quot;);</span>
+<span class="fc" id="L56">        String cleanDescription = optionalText(description, DESCRIPTION_MAX, &quot;The description&quot;);</span>
+<span class="fc" id="L57">        requireValidWindow(startsAt, endsAt);</span>
+<span class="fc" id="L58">        Election election = electionRepository.save(</span>
+<span class="fc" id="L59">                new Election(cleanTitle, cleanDescription, startsAt, endsAt, clock.instant()));</span>
+<span class="fc" id="L60">        auditService.recordAdminEvent(AuditEventType.ELECTION_CREATED, actor, election.getId(),</span>
+                &quot;Title: &quot; + cleanTitle);
+<span class="fc" id="L62">        return election;</span>
+    }
+
+    @Transactional
+    public void updateDraft(String actor, long electionId, String title, String description, Instant startsAt,
+            Instant endsAt) {
+<span class="fc" id="L68">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L69">        requireDraft(election);</span>
+<span class="fc" id="L70">        String cleanTitle = requireText(title, TITLE_MAX, &quot;The title&quot;);</span>
+<span class="fc" id="L71">        String cleanDescription = optionalText(description, DESCRIPTION_MAX, &quot;The description&quot;);</span>
+<span class="fc" id="L72">        requireValidWindow(startsAt, endsAt);</span>
+<span class="fc" id="L73">        election.updateSetup(cleanTitle, cleanDescription, startsAt, endsAt);</span>
+<span class="fc" id="L74">        auditService.recordAdminEvent(AuditEventType.ELECTION_UPDATED, actor, electionId, &quot;Title: &quot; + cleanTitle);</span>
+<span class="fc" id="L75">    }</span>
+
+    @Transactional
+    public Candidate addCandidate(String actor, long electionId, String name, String biography) {
+<span class="fc" id="L79">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L80">        requireDraft(election);</span>
+<span class="fc" id="L81">        String cleanName = requireText(name, CANDIDATE_NAME_MAX, &quot;The candidate name&quot;);</span>
+<span class="fc" id="L82">        String cleanBiography = optionalText(biography, BIOGRAPHY_MAX, &quot;The candidate statement&quot;);</span>
+<span class="fc" id="L83">        boolean nameTaken = candidateRepository.findByElectionIdOrderByIdAsc(electionId).stream()</span>
+<span class="fc" id="L84">                .anyMatch(existing -&gt; existing.getName().equalsIgnoreCase(cleanName));</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (nameTaken) {</span>
+<span class="fc" id="L86">            throw new BusinessRuleException(&quot;This election already has a candidate with that name.&quot;);</span>
+        }
+<span class="fc" id="L88">        Candidate candidate = candidateRepository.save(new Candidate(electionId, cleanName, cleanBiography));</span>
+<span class="fc" id="L89">        auditService.recordAdminEvent(AuditEventType.CANDIDATE_ADDED, actor, electionId, &quot;Candidate: &quot; + cleanName);</span>
+<span class="fc" id="L90">        return candidate;</span>
+    }
+
+    @Transactional
+    public void removeCandidate(String actor, long electionId, long candidateId) {
+<span class="fc" id="L95">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L96">        requireDraft(election);</span>
+<span class="fc" id="L97">        Candidate candidate = candidateRepository.findByIdAndElectionId(candidateId, electionId)</span>
+<span class="fc" id="L98">                .orElseThrow(() -&gt; new NotFoundException(&quot;This candidate does not belong to the election.&quot;));</span>
+        // Safe to delete: a draft has never accepted a ballot.
+<span class="fc" id="L100">        candidateRepository.delete(candidate);</span>
+<span class="fc" id="L101">        auditService.recordAdminEvent(AuditEventType.CANDIDATE_REMOVED, actor, electionId,</span>
+<span class="fc" id="L102">                &quot;Candidate: &quot; + candidate.getName());</span>
+<span class="fc" id="L103">    }</span>
+
+    @Transactional
+    public void activate(String actor, long electionId) {
+<span class="fc" id="L107">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L108">        List&lt;String&gt; candidateNames = candidateRepository.findByElectionIdOrderByIdAsc(electionId).stream()</span>
+<span class="fc" id="L109">                .map(Candidate::getName)</span>
+<span class="fc" id="L110">                .toList();</span>
+<span class="fc" id="L111">        List&lt;ActivationProblem&gt; problems = ElectionLifecyclePolicy.activationProblems(election.getStatus(),</span>
+<span class="fc" id="L112">                election.getStartsAt(), election.getEndsAt(), candidateNames, clock.instant());</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (!problems.isEmpty()) {</span>
+<span class="fc" id="L114">            throw new BusinessRuleException(problems.stream()</span>
+<span class="fc" id="L115">                    .map(ActivationProblem::message)</span>
+<span class="fc" id="L116">                    .collect(Collectors.joining(&quot; &quot;)));</span>
+        }
+<span class="fc" id="L118">        election.markOpen();</span>
+<span class="fc" id="L119">        auditService.recordAdminEvent(AuditEventType.ELECTION_ACTIVATED, actor, electionId,</span>
+<span class="fc" id="L120">                &quot;Candidates on the ballot: &quot; + candidateNames.size());</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Closes an activated election. Once this transaction commits, no vote is accepted: a vote
+     * that was waiting for the election lock sees the CLOSED status when it gets the lock.
+     */
+    @Transactional
+    public void close(String actor, long electionId) {
+<span class="fc" id="L129">        Election election = lockElection(electionId);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (!ElectionLifecyclePolicy.canClose(election.getStatus())) {</span>
+<span class="fc" id="L131">            throw new BusinessRuleException(&quot;Only an activated election can be closed.&quot;);</span>
+        }
+<span class="fc" id="L133">        election.markClosed();</span>
+<span class="fc" id="L134">        auditService.recordAdminEvent(AuditEventType.ELECTION_CLOSED, actor, electionId,</span>
+                &quot;Closed by an administrator.&quot;);
+<span class="fc" id="L136">    }</span>
+
+    @Transactional
+    public void grantEligibility(String actor, long electionId, long voterId) {
+<span class="fc" id="L140">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L141">        requireEligibilityManageable(election);</span>
+<span class="fc" id="L142">        UserAccount voter = userAccountRepository.findById(voterId)</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                .filter(account -&gt; account.getRole() == Role.VOTER)</span>
+<span class="fc" id="L144">                .orElseThrow(() -&gt; new NotFoundException(&quot;This voter account does not exist.&quot;));</span>
+<span class="fc" id="L145">        ElectionEligibility eligibility = eligibilityRepository.findByElectionIdAndVoterId(electionId, voterId)</span>
+<span class="fc" id="L146">                .orElseGet(() -&gt; new ElectionEligibility(electionId, voterId));</span>
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if (eligibility.getId() != null &amp;&amp; eligibility.isActive()) {</span>
+<span class="fc" id="L148">            return; // already eligible: nothing to change, nothing to audit</span>
+        }
+<span class="fc" id="L150">        eligibility.setActive(true);</span>
+<span class="fc" id="L151">        eligibilityRepository.save(eligibility);</span>
+<span class="fc" id="L152">        auditService.recordAdminEvent(AuditEventType.ELIGIBILITY_GRANTED, actor, electionId,</span>
+<span class="fc" id="L153">                &quot;Voter: &quot; + voter.getUsername());</span>
+<span class="fc" id="L154">    }</span>
+
+    /** Revoking never touches participation records or ballots: an accepted vote stays counted. */
+    @Transactional
+    public void revokeEligibility(String actor, long electionId, long voterId) {
+<span class="fc" id="L159">        Election election = lockElection(electionId);</span>
+<span class="fc" id="L160">        requireEligibilityManageable(election);</span>
+<span class="fc" id="L161">        ElectionEligibility eligibility = eligibilityRepository.findByElectionIdAndVoterId(electionId, voterId)</span>
+<span class="fc" id="L162">                .filter(ElectionEligibility::isActive)</span>
+<span class="fc" id="L163">                .orElseThrow(() -&gt; new NotFoundException(&quot;This voter is not eligible for the election.&quot;));</span>
+<span class="fc" id="L164">        eligibility.setActive(false);</span>
+<span class="fc" id="L165">        String username = userAccountRepository.findById(voterId).map(UserAccount::getUsername).orElse(&quot;unknown&quot;);</span>
+<span class="fc" id="L166">        auditService.recordAdminEvent(AuditEventType.ELIGIBILITY_REVOKED, actor, electionId, &quot;Voter: &quot; + username);</span>
+<span class="fc" id="L167">    }</span>
+
+    private Election lockElection(long electionId) {
+<span class="fc" id="L170">        return electionRepository.findByIdForUpdate(electionId)</span>
+<span class="pc" id="L171">                .orElseThrow(() -&gt; new NotFoundException(&quot;This election does not exist.&quot;));</span>
+    }
+
+    private static void requireDraft(Election election) {
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (!ElectionLifecyclePolicy.canEditSetup(election.getStatus())) {</span>
+<span class="fc" id="L176">            throw new BusinessRuleException(</span>
+                    &quot;The election has been activated. Its details, schedule and candidates can no longer change.&quot;);
+        }
+<span class="fc" id="L179">    }</span>
+
+    private void requireEligibilityManageable(Election election) {
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (!ElectionLifecyclePolicy.canManageEligibility(election.phaseAt(clock.instant()))) {</span>
+<span class="fc" id="L183">            throw new BusinessRuleException(&quot;Voting is over. Eligibility can no longer change.&quot;);</span>
+        }
+<span class="fc" id="L185">    }</span>
+
+    private static void requireValidWindow(Instant startsAt, Instant endsAt) {
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (!ElectionLifecyclePolicy.isValidWindow(startsAt, endsAt)) {</span>
+<span class="fc" id="L189">            throw new BusinessRuleException(&quot;The start time must be before the end time.&quot;);</span>
+        }
+<span class="fc" id="L191">    }</span>
+
+    private static String requireText(String value, int maxLength, String fieldName) {
+<span class="pc bpc" id="L194" title="1 of 4 branches missed.">        if (value == null || value.isBlank()) {</span>
+<span class="fc" id="L195">            throw new BusinessRuleException(fieldName + &quot; is required.&quot;);</span>
+        }
+<span class="fc" id="L197">        return optionalText(value, maxLength, fieldName);</span>
+    }
+
+    private static String optionalText(String value, int maxLength, String fieldName) {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        String clean = value == null ? &quot;&quot; : value.trim();</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (clean.length() &gt; maxLength) {</span>
+<span class="fc" id="L203">            throw new BusinessRuleException(fieldName + &quot; must be at most &quot; + maxLength + &quot; characters long.&quot;);</span>
+        }
+<span class="fc" id="L205">        return clean;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReceiptCodec.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.policy</a> &gt; <span class="el_source">ReceiptCodec.java</span></div><h1>ReceiptCodec.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.policy;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
+import java.util.Optional;
+
+/**
+ * Encoding, normalising and hashing of confirmation codes (FR-12, FR-13). A code is 160 random
+ * bits written as 32 characters of Crockford Base32, shown in groups of four. Only the SHA-256
+ * hash of the code is stored.
+ */
+public final class ReceiptCodec {
+
+    /** 20 bytes = 160 bits of randomness, above the 128-bit minimum. */
+    public static final int RANDOM_BYTES = 20;
+    public static final int CODE_LENGTH = 32;
+    private static final int GROUP_SIZE = 4;
+    /** Crockford Base32: no I, L, O or U, so codes are easier to read and type. */
+    private static final String ALPHABET = &quot;0123456789ABCDEFGHJKMNPQRSTVWXYZ&quot;;
+
+    private ReceiptCodec() {
+    }
+
+    /** Turns exactly 20 random bytes into the 32-character canonical code. */
+    public static String encode(byte[] randomBytes) {
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        if (randomBytes == null || randomBytes.length != RANDOM_BYTES) {</span>
+<span class="fc" id="L29">            throw new IllegalArgumentException(&quot;A receipt code needs exactly &quot; + RANDOM_BYTES + &quot; random bytes.&quot;);</span>
+        }
+<span class="fc" id="L31">        StringBuilder code = new StringBuilder(CODE_LENGTH);</span>
+<span class="fc" id="L32">        int buffer = 0;</span>
+<span class="fc" id="L33">        int bitsInBuffer = 0;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (byte value : randomBytes) {</span>
+<span class="fc" id="L35">            buffer = (buffer &lt;&lt; 8) | (value &amp; 0xFF);</span>
+<span class="fc" id="L36">            bitsInBuffer += 8;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">            while (bitsInBuffer &gt;= 5) {</span>
+<span class="fc" id="L38">                bitsInBuffer -= 5;</span>
+<span class="fc" id="L39">                code.append(ALPHABET.charAt((buffer &gt;&gt; bitsInBuffer) &amp; 31));</span>
+            }
+<span class="fc" id="L41">            buffer &amp;= (1 &lt;&lt; bitsInBuffer) - 1;</span>
+        }
+<span class="fc" id="L43">        return code.toString();</span>
+    }
+
+    /** Display form: XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX. */
+    public static String format(String canonicalCode) {
+<span class="fc" id="L48">        StringBuilder formatted = new StringBuilder(CODE_LENGTH + CODE_LENGTH / GROUP_SIZE);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (int index = 0; index &lt; canonicalCode.length(); index++) {</span>
+<span class="fc bfc" id="L50" title="All 4 branches covered.">            if (index &gt; 0 &amp;&amp; index % GROUP_SIZE == 0) {</span>
+<span class="fc" id="L51">                formatted.append('-');</span>
+            }
+<span class="fc" id="L53">            formatted.append(canonicalCode.charAt(index));</span>
+        }
+<span class="fc" id="L55">        return formatted.toString();</span>
+    }
+
+    /**
+     * Accepts what a person may type: lower case, spaces, dashes, and the look-alike letters
+     * O (read as 0) and I or L (read as 1). Returns the canonical code, or empty when the input
+     * cannot be a receipt code.
+     */
+    public static Optional&lt;String&gt; normalize(String input) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (input == null) {</span>
+<span class="fc" id="L65">            return Optional.empty();</span>
+        }
+<span class="fc" id="L67">        StringBuilder canonical = new StringBuilder(CODE_LENGTH);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for (char raw : input.toCharArray()) {</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">            if (raw == '-' || Character.isWhitespace(raw)) {</span>
+<span class="fc" id="L70">                continue;</span>
+            }
+<span class="fc" id="L72">            char upper = Character.toUpperCase(raw);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (upper == 'O') {</span>
+<span class="fc" id="L74">                upper = '0';</span>
+<span class="fc bfc" id="L75" title="All 4 branches covered.">            } else if (upper == 'I' || upper == 'L') {</span>
+<span class="fc" id="L76">                upper = '1';</span>
+            }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (ALPHABET.indexOf(upper) &lt; 0) {</span>
+<span class="fc" id="L79">                return Optional.empty();</span>
+            }
+<span class="fc" id="L81">            canonical.append(upper);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            if (canonical.length() &gt; CODE_LENGTH) {</span>
+<span class="fc" id="L83">                return Optional.empty();</span>
+            }
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (canonical.length() != CODE_LENGTH) {</span>
+<span class="fc" id="L87">            return Optional.empty();</span>
+        }
+<span class="fc" id="L89">        return Optional.of(canonical.toString());</span>
+    }
+
+    /** Lower-case hexadecimal SHA-256 of the canonical code: 64 characters. */
+    public static String hash(String canonicalCode) {
+        try {
+<span class="fc" id="L95">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L96">            return HexFormat.of().formatHex(digest.digest(canonicalCode.getBytes(StandardCharsets.US_ASCII)));</span>
+<span class="nc" id="L97">        } catch (NoSuchAlgorithmException impossible) {</span>
+<span class="nc" id="L98">            throw new IllegalStateException(&quot;SHA-256 is required by every Java runtime.&quot;, impossible);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

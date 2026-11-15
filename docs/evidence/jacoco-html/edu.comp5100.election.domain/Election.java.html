@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Election.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.domain</a> &gt; <span class="el_source">Election.java</span></div><h1>Election.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.domain;
+
+import edu.comp5100.election.policy.ElectionLifecyclePolicy;
+import edu.comp5100.election.policy.ElectionPhase;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+/** An election with a voting window stored in UTC. */
+@Entity
+@Table(name = &quot;election&quot;)
+public class Election {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String title;
+
+    @Column(nullable = false, length = 1000)
+    private String description;
+
+    @Column(name = &quot;starts_at&quot;, nullable = false)
+    private Instant startsAt;
+
+    @Column(name = &quot;ends_at&quot;, nullable = false)
+    private Instant endsAt;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, length = 20)
+    private ElectionStatus status;
+
+    @Column(name = &quot;created_at&quot;, nullable = false)
+    private Instant createdAt;
+
+<span class="fc" id="L46">    protected Election() {</span>
+        // required by JPA
+<span class="fc" id="L48">    }</span>
+
+<span class="fc" id="L50">    public Election(String title, String description, Instant startsAt, Instant endsAt, Instant createdAt) {</span>
+<span class="fc" id="L51">        this.title = title;</span>
+<span class="fc" id="L52">        this.description = description;</span>
+<span class="fc" id="L53">        this.startsAt = startsAt;</span>
+<span class="fc" id="L54">        this.endsAt = endsAt;</span>
+<span class="fc" id="L55">        this.status = ElectionStatus.DRAFT;</span>
+<span class="fc" id="L56">        this.createdAt = createdAt;</span>
+<span class="fc" id="L57">    }</span>
+
+    /** Changes the editable setup. Callers must first check that the election is still a draft. */
+    public void updateSetup(String title, String description, Instant startsAt, Instant endsAt) {
+<span class="fc" id="L61">        this.title = title;</span>
+<span class="fc" id="L62">        this.description = description;</span>
+<span class="fc" id="L63">        this.startsAt = startsAt;</span>
+<span class="fc" id="L64">        this.endsAt = endsAt;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void markOpen() {
+<span class="fc" id="L68">        this.status = ElectionStatus.OPEN;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void markClosed() {
+<span class="fc" id="L72">        this.status = ElectionStatus.CLOSED;</span>
+<span class="fc" id="L73">    }</span>
+
+    public ElectionPhase phaseAt(Instant now) {
+<span class="fc" id="L76">        return ElectionLifecyclePolicy.phaseOf(status, startsAt, endsAt, now);</span>
+    }
+
+    public Long getId() {
+<span class="fc" id="L80">        return id;</span>
+    }
+
+    public String getTitle() {
+<span class="fc" id="L84">        return title;</span>
+    }
+
+    public String getDescription() {
+<span class="fc" id="L88">        return description;</span>
+    }
+
+    public Instant getStartsAt() {
+<span class="fc" id="L92">        return startsAt;</span>
+    }
+
+    public Instant getEndsAt() {
+<span class="fc" id="L96">        return endsAt;</span>
+    }
+
+    public ElectionStatus getStatus() {
+<span class="fc" id="L100">        return status;</span>
+    }
+
+    public Instant getCreatedAt() {
+<span class="nc" id="L104">        return createdAt;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

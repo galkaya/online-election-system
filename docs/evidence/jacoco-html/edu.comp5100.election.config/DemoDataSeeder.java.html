@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DemoDataSeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.config</a> &gt; <span class="el_source">DemoDataSeeder.java</span></div><h1>DemoDataSeeder.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.config;
+
+import edu.comp5100.election.domain.Ballot;
+import edu.comp5100.election.domain.Candidate;
+import edu.comp5100.election.domain.Election;
+import edu.comp5100.election.domain.ElectionEligibility;
+import edu.comp5100.election.domain.Participation;
+import edu.comp5100.election.domain.Role;
+import edu.comp5100.election.domain.UserAccount;
+import edu.comp5100.election.policy.ReceiptCodec;
+import edu.comp5100.election.repository.BallotRepository;
+import edu.comp5100.election.repository.CandidateRepository;
+import edu.comp5100.election.repository.ElectionEligibilityRepository;
+import edu.comp5100.election.repository.ElectionRepository;
+import edu.comp5100.election.repository.ParticipationRepository;
+import edu.comp5100.election.repository.UserAccountRepository;
+import edu.comp5100.election.service.ReceiptGenerator;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * FR-18: fictional demo data, created only in the &quot;demo&quot; profile and only when the database has
+ * no accounts yet. Dates are relative to the moment of seeding and are never moved afterwards.
+ * The accounts below are fictional and exist only in the local demo database.
+ */
+@Component
+@Profile(&quot;demo&quot;)
+public class DemoDataSeeder implements ApplicationRunner {
+
+    public static final String ADMIN_USERNAME = &quot;admin&quot;;
+    public static final String ADMIN_PASSWORD = &quot;Admin-Demo-2026&quot;;
+    public static final String VOTER_PASSWORD = &quot;Voter-Demo-2026&quot;;
+
+<span class="fc" id="L45">    private static final Logger log = LoggerFactory.getLogger(DemoDataSeeder.class);</span>
+
+    private final UserAccountRepository userAccountRepository;
+    private final ElectionRepository electionRepository;
+    private final CandidateRepository candidateRepository;
+    private final ElectionEligibilityRepository eligibilityRepository;
+    private final ParticipationRepository participationRepository;
+    private final BallotRepository ballotRepository;
+    private final ReceiptGenerator receiptGenerator;
+    private final PasswordEncoder passwordEncoder;
+    private final Clock clock;
+
+    public DemoDataSeeder(UserAccountRepository userAccountRepository, ElectionRepository electionRepository,
+            CandidateRepository candidateRepository, ElectionEligibilityRepository eligibilityRepository,
+            ParticipationRepository participationRepository, BallotRepository ballotRepository,
+<span class="fc" id="L60">            ReceiptGenerator receiptGenerator, PasswordEncoder passwordEncoder, Clock clock) {</span>
+<span class="fc" id="L61">        this.userAccountRepository = userAccountRepository;</span>
+<span class="fc" id="L62">        this.electionRepository = electionRepository;</span>
+<span class="fc" id="L63">        this.candidateRepository = candidateRepository;</span>
+<span class="fc" id="L64">        this.eligibilityRepository = eligibilityRepository;</span>
+<span class="fc" id="L65">        this.participationRepository = participationRepository;</span>
+<span class="fc" id="L66">        this.ballotRepository = ballotRepository;</span>
+<span class="fc" id="L67">        this.receiptGenerator = receiptGenerator;</span>
+<span class="fc" id="L68">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L69">        this.clock = clock;</span>
+<span class="fc" id="L70">    }</span>
+
+    @Override
+    @Transactional
+    public void run(ApplicationArguments args) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (userAccountRepository.count() &gt; 0) {</span>
+<span class="fc" id="L76">            log.info(&quot;Demo data already present; nothing was changed.&quot;);</span>
+<span class="fc" id="L77">            return;</span>
+        }
+<span class="fc" id="L79">        Instant now = clock.instant().truncatedTo(ChronoUnit.MINUTES);</span>
+
+<span class="fc" id="L81">        userAccountRepository.save(new UserAccount(ADMIN_USERNAME, passwordEncoder.encode(ADMIN_PASSWORD),</span>
+                &quot;Morgan Reyes (Election Administrator)&quot;, Role.ADMIN, now));
+<span class="fc" id="L83">        UserAccount voter1 = voter(&quot;voter1&quot;, &quot;Ava Brooks&quot;, now);</span>
+<span class="fc" id="L84">        UserAccount voter2 = voter(&quot;voter2&quot;, &quot;Ben Carter&quot;, now);</span>
+<span class="fc" id="L85">        UserAccount voter3 = voter(&quot;voter3&quot;, &quot;Chloe Diaz&quot;, now);</span>
+<span class="fc" id="L86">        voter(&quot;voter4&quot;, &quot;Dylan Evans&quot;, now); // exists, but is eligible for no election</span>
+<span class="fc" id="L87">        UserAccount voter5 = voter(&quot;voter5&quot;, &quot;Ella Foster&quot;, now);</span>
+<span class="fc" id="L88">        voter5.setEnabled(false); // eligible on paper, but the account is disabled</span>
+
+        // 1. Main demo election: a ready-to-activate draft with three candidates.
+<span class="fc" id="L91">        Election council = electionRepository.save(new Election(&quot;Student Council President 2026&quot;,</span>
+                &quot;Choose the next president of the student council. This is a classroom simulation with &quot;
+                        + &quot;fictional candidates and voters.&quot;,
+<span class="fc" id="L94">                now, now.plus(Duration.ofDays(14)), now));</span>
+<span class="fc" id="L95">        candidate(council, &quot;Jordan Lee&quot;, &quot;Third-year computer science student. Wants longer library hours and &quot;</span>
+                + &quot;more study rooms.&quot;);
+<span class="fc" id="L97">        candidate(council, &quot;Priya Nair&quot;, &quot;Second-year biology student. Wants cheaper campus meals and a &quot;</span>
+                + &quot;student food pantry.&quot;);
+<span class="fc" id="L99">        candidate(council, &quot;Marcus Hill&quot;, &quot;Fourth-year business student. Wants more funding for clubs and &quot;</span>
+                + &quot;campus events.&quot;);
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        for (UserAccount eligibleVoter : List.of(voter1, voter2, voter3, voter5)) {</span>
+<span class="fc" id="L102">            eligibilityRepository.save(new ElectionEligibility(council.getId(), eligibleVoter.getId()));</span>
+<span class="fc" id="L103">        }</span>
+
+        // 2. Deadline fixture: activated, never closed by an administrator, deadline already passed.
+<span class="fc" id="L106">        Election referendum = electionRepository.save(new Election(&quot;Library Hours Referendum&quot;,</span>
+                &quot;Should the main library stay open until midnight on weekdays? The voting period of this &quot;
+                        + &quot;election has already ended.&quot;,
+<span class="fc" id="L109">                now.minus(Duration.ofDays(3)), now.minus(Duration.ofDays(1)), now.minus(Duration.ofDays(4))));</span>
+<span class="fc" id="L110">        Candidate yes = candidate(referendum, &quot;Yes, extend the hours&quot;, &quot;Keep the library open until midnight.&quot;);</span>
+<span class="fc" id="L111">        candidate(referendum, &quot;No, keep the current hours&quot;, &quot;Keep closing the library at 9 PM.&quot;);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (UserAccount eligibleVoter : List.of(voter1, voter2, voter3)) {</span>
+<span class="fc" id="L113">            eligibilityRepository.save(new ElectionEligibility(referendum.getId(), eligibleVoter.getId()));</span>
+<span class="fc" id="L114">        }</span>
+<span class="fc" id="L115">        referendum.markOpen();</span>
+        // Two fictional votes cast before the deadline, both for &quot;Yes&quot;, so the result page shows a winner
+        // and a candidate with zero votes. voter3 did not vote and can no longer do so.
+<span class="fc" id="L118">        seedVote(referendum, voter1, yes);</span>
+<span class="fc" id="L119">        seedVote(referendum, voter2, yes);</span>
+
+        // 3. Upcoming fixture: activated, but the voting window has not started.
+<span class="fc" id="L122">        Election festival = electionRepository.save(new Election(&quot;Spring Festival Theme Vote&quot;,</span>
+                &quot;Pick the theme of next year's spring festival. Voting has not started yet.&quot;,
+<span class="fc" id="L124">                now.plus(Duration.ofDays(7)), now.plus(Duration.ofDays(14)), now));</span>
+<span class="fc" id="L125">        candidate(festival, &quot;Around the World&quot;, &quot;Food, music and games from many countries.&quot;);</span>
+<span class="fc" id="L126">        candidate(festival, &quot;Retro Arcade&quot;, &quot;Classic video games and neon lights.&quot;);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (UserAccount eligibleVoter : List.of(voter1, voter2, voter3)) {</span>
+<span class="fc" id="L128">            eligibilityRepository.save(new ElectionEligibility(festival.getId(), eligibleVoter.getId()));</span>
+<span class="fc" id="L129">        }</span>
+<span class="fc" id="L130">        festival.markOpen();</span>
+
+<span class="fc" id="L132">        log.info(&quot;Demo data created: 1 administrator, 5 voters, 3 elections.&quot;);</span>
+<span class="fc" id="L133">    }</span>
+
+    private UserAccount voter(String username, String displayName, Instant now) {
+<span class="fc" id="L136">        return userAccountRepository.save(new UserAccount(username, passwordEncoder.encode(VOTER_PASSWORD),</span>
+                displayName, Role.VOTER, now));
+    }
+
+    private Candidate candidate(Election election, String name, String biography) {
+<span class="fc" id="L141">        return candidateRepository.save(new Candidate(election.getId(), name, biography));</span>
+    }
+
+    /** The confirmation codes of these seeded fixture votes are discarded; nobody needs to verify them. */
+    private void seedVote(Election election, UserAccount voter, Candidate candidate) {
+<span class="fc" id="L146">        participationRepository.save(new Participation(election.getId(), voter.getId()));</span>
+<span class="fc" id="L147">        ballotRepository.save(new Ballot(election.getId(), candidate.getId(),</span>
+<span class="fc" id="L148">                ReceiptCodec.hash(receiptGenerator.newCode())));</span>
+<span class="fc" id="L149">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

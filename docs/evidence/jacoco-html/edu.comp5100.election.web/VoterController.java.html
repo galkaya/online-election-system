@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VoterController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.web</a> &gt; <span class="el_source">VoterController.java</span></div><h1>VoterController.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.web;
+
+import edu.comp5100.election.domain.Candidate;
+import edu.comp5100.election.policy.VoteRejectionReason;
+import edu.comp5100.election.service.BallotView;
+import edu.comp5100.election.service.ElectionQueryService;
+import edu.comp5100.election.service.VoteNotProcessedException;
+import edu.comp5100.election.service.VoteReceipt;
+import edu.comp5100.election.service.VoteRejectedException;
+import edu.comp5100.election.service.VotingService;
+import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+/**
+ * Voter pages (FR-08 to FR-12). The voter is always the authenticated principal; no request
+ * parameter can name another user. The controller holds no voting rules: it calls the service.
+ */
+@Controller
+@RequestMapping(&quot;/voter&quot;)
+public class VoterController {
+
+    private final VotingService votingService;
+    private final ElectionQueryService electionQueryService;
+
+<span class="fc" id="L34">    public VoterController(VotingService votingService, ElectionQueryService electionQueryService) {</span>
+<span class="fc" id="L35">        this.votingService = votingService;</span>
+<span class="fc" id="L36">        this.electionQueryService = electionQueryService;</span>
+<span class="fc" id="L37">    }</span>
+
+    @GetMapping
+    public String dashboard(Principal principal, Model model) {
+<span class="fc" id="L41">        model.addAttribute(&quot;rows&quot;, electionQueryService.voterDashboard(principal.getName()));</span>
+<span class="fc" id="L42">        return &quot;voter/dashboard&quot;;</span>
+    }
+
+    @GetMapping(&quot;/elections/{electionId}/ballot&quot;)
+    public String ballot(@PathVariable long electionId, Principal principal, Model model) {
+<span class="fc" id="L47">        model.addAttribute(&quot;ballot&quot;, votingService.openBallot(principal.getName(), electionId));</span>
+<span class="fc" id="L48">        return &quot;voter/ballot&quot;;</span>
+    }
+
+    /** Shows the chosen candidate for confirmation. Changes nothing; POST keeps the choice out of URLs. */
+    @PostMapping(&quot;/elections/{electionId}/review&quot;)
+    public String review(@PathVariable long electionId, @RequestParam(required = false) Long candidateId,
+            Principal principal, Model model, HttpServletResponse response) {
+<span class="fc" id="L55">        BallotView ballot = votingService.openBallot(principal.getName(), electionId);</span>
+<span class="fc" id="L56">        model.addAttribute(&quot;ballot&quot;, ballot);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        Candidate selected = candidateId == null ? null : ballot.candidate(candidateId);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (selected == null) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            VoteRejectionReason problem = candidateId == null</span>
+<span class="fc" id="L60">                    ? VoteRejectionReason.NO_CANDIDATE_SELECTED</span>
+<span class="fc" id="L61">                    : VoteRejectionReason.INVALID_CANDIDATE;</span>
+<span class="fc" id="L62">            model.addAttribute(&quot;selectionError&quot;, problem.message());</span>
+<span class="fc" id="L63">            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);</span>
+<span class="fc" id="L64">            return &quot;voter/ballot&quot;;</span>
+        }
+<span class="fc" id="L66">        model.addAttribute(&quot;selected&quot;, selected);</span>
+<span class="fc" id="L67">        return &quot;voter/review&quot;;</span>
+    }
+
+    /** Post/Redirect/Get: the confirmation code travels as a one-time flash attribute, never in a URL. */
+    @PostMapping(&quot;/elections/{electionId}/vote&quot;)
+    public String vote(@PathVariable long electionId, @RequestParam(required = false) Long candidateId,
+            Principal principal, RedirectAttributes redirectAttributes) {
+<span class="fc" id="L74">        VoteReceipt receipt = votingService.castVote(principal.getName(), electionId, candidateId);</span>
+<span class="fc" id="L75">        redirectAttributes.addFlashAttribute(&quot;receiptCode&quot;, receipt.code());</span>
+<span class="fc" id="L76">        return &quot;redirect:/voter/elections/&quot; + electionId + &quot;/confirmation&quot;;</span>
+    }
+
+    @GetMapping(&quot;/elections/{electionId}/confirmation&quot;)
+    public String confirmation(@PathVariable long electionId, Principal principal, Model model) {
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (!electionQueryService.hasVoted(principal.getName(), electionId)) {</span>
+<span class="nc" id="L82">            return &quot;redirect:/voter&quot;;</span>
+        }
+<span class="fc" id="L84">        model.addAttribute(&quot;election&quot;, electionQueryService.requireElection(electionId));</span>
+<span class="fc" id="L85">        return &quot;voter/confirmation&quot;;</span>
+    }
+
+    @ExceptionHandler(VoteRejectedException.class)
+    public String voteRejected(VoteRejectedException rejected, Model model, HttpServletResponse response) {
+<span class="fc" id="L90">        response.setStatus(statusFor(rejected.reason()));</span>
+<span class="fc" id="L91">        model.addAttribute(&quot;reason&quot;, rejected.reason());</span>
+<span class="fc" id="L92">        return &quot;voter/rejected&quot;;</span>
+    }
+
+    @ExceptionHandler(VoteNotProcessedException.class)
+    public String voteNotProcessed(HttpServletResponse response) {
+<span class="nc" id="L97">        response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);</span>
+<span class="nc" id="L98">        return &quot;voter/not-processed&quot;;</span>
+    }
+
+    static int statusFor(VoteRejectionReason reason) {
+<span class="fc bfc" id="L102" title="All 4 branches covered.">        return switch (reason) {</span>
+<span class="fc" id="L103">            case ELECTION_NOT_FOUND -&gt; HttpServletResponse.SC_NOT_FOUND;</span>
+<span class="fc" id="L104">            case ACCOUNT_NOT_PERMITTED, NOT_ELIGIBLE -&gt; HttpServletResponse.SC_FORBIDDEN;</span>
+<span class="fc" id="L105">            case NO_CANDIDATE_SELECTED, INVALID_CANDIDATE -&gt; HttpServletResponse.SC_BAD_REQUEST;</span>
+            case ELECTION_NOT_OPEN, VOTING_NOT_STARTED, VOTING_ENDED, ELECTION_CLOSED, ALREADY_VOTED -&gt;
+<span class="fc" id="L107">                    HttpServletResponse.SC_CONFLICT;</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

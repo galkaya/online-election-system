@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ElectionLifecyclePolicy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.policy</a> &gt; <span class="el_source">ElectionLifecyclePolicy.java</span></div><h1>ElectionLifecyclePolicy.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.policy;
+
+import edu.comp5100.election.domain.ElectionStatus;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Pure rules for the election life cycle and the voting window. No Spring, no database.
+ * The current time is always passed in, so the rules are testable with a fixed clock.
+ */
+public final class ElectionLifecyclePolicy {
+
+    public static final int MINIMUM_CANDIDATES = 2;
+
+    private ElectionLifecyclePolicy() {
+    }
+
+    /** A window is valid when both ends exist and the start is strictly before the end. */
+    public static boolean isValidWindow(Instant startsAt, Instant endsAt) {
+<span class="fc bfc" id="L23" title="All 6 branches covered.">        return startsAt != null &amp;&amp; endsAt != null &amp;&amp; startsAt.isBefore(endsAt);</span>
+    }
+
+    /**
+     * FR-07: {@code startsAt &lt;= now &lt; endsAt}. The start instant is accepted, the end instant is not.
+     */
+    public static boolean isWithinVotingWindow(Instant startsAt, Instant endsAt, Instant now) {
+<span class="fc bfc" id="L30" title="All 4 branches covered.">        return !now.isBefore(startsAt) &amp;&amp; now.isBefore(endsAt);</span>
+    }
+
+    public static ElectionPhase phaseOf(ElectionStatus status, Instant startsAt, Instant endsAt, Instant now) {
+<span class="fc bfc" id="L34" title="All 3 branches covered.">        return switch (status) {</span>
+<span class="fc" id="L35">            case DRAFT -&gt; ElectionPhase.DRAFT;</span>
+<span class="fc" id="L36">            case CLOSED -&gt; ElectionPhase.CLOSED;</span>
+            case OPEN -&gt; {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">                if (now.isBefore(startsAt)) {</span>
+<span class="fc" id="L39">                    yield ElectionPhase.SCHEDULED;</span>
+                }
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                if (now.isBefore(endsAt)) {</span>
+<span class="fc" id="L42">                    yield ElectionPhase.VOTING;</span>
+                }
+<span class="fc" id="L44">                yield ElectionPhase.ENDED;</span>
+            }
+        };
+    }
+
+    /** Returns every reason that blocks activation; an empty list means the draft can be activated. */
+    public static List&lt;ActivationProblem&gt; activationProblems(ElectionStatus status, Instant startsAt, Instant endsAt,
+            Collection&lt;String&gt; candidateNames, Instant now) {
+<span class="fc" id="L52">        List&lt;ActivationProblem&gt; problems = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (status != ElectionStatus.DRAFT) {</span>
+<span class="fc" id="L54">            problems.add(ActivationProblem.NOT_A_DRAFT);</span>
+<span class="fc" id="L55">            return problems;</span>
+        }
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (!isValidWindow(startsAt, endsAt)) {</span>
+<span class="fc" id="L58">            problems.add(ActivationProblem.INVALID_WINDOW);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        } else if (!now.isBefore(endsAt)) {</span>
+<span class="fc" id="L60">            problems.add(ActivationProblem.DEADLINE_PASSED);</span>
+        }
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (countDistinctValidNames(candidateNames) &lt; MINIMUM_CANDIDATES) {</span>
+<span class="fc" id="L63">            problems.add(ActivationProblem.TOO_FEW_CANDIDATES);</span>
+        }
+<span class="fc" id="L65">        return problems;</span>
+    }
+
+    /** Counts candidate names that are not blank, ignoring case and surrounding spaces for duplicates. */
+    public static long countDistinctValidNames(Collection&lt;String&gt; candidateNames) {
+<span class="fc" id="L70">        return candidateNames.stream()</span>
+<span class="pc bpc" id="L71" title="1 of 4 branches missed.">                .filter(name -&gt; name != null &amp;&amp; !name.isBlank())</span>
+<span class="fc" id="L72">                .map(name -&gt; name.trim().toLowerCase(Locale.ROOT))</span>
+<span class="fc" id="L73">                .distinct()</span>
+<span class="fc" id="L74">                .count();</span>
+    }
+
+    /** Title, description, window and candidates can change only while the election is a draft. */
+    public static boolean canEditSetup(ElectionStatus status) {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        return status == ElectionStatus.DRAFT;</span>
+    }
+
+    /** Only an activated election can be closed; a closed election is never reopened. */
+    public static boolean canClose(ElectionStatus status) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        return status == ElectionStatus.OPEN;</span>
+    }
+
+    /** FR-14: results exist for viewers only after closing or after the deadline. */
+    public static boolean resultsVisible(ElectionPhase phase) {
+<span class="fc bfc" id="L89" title="All 4 branches covered.">        return phase == ElectionPhase.ENDED || phase == ElectionPhase.CLOSED;</span>
+    }
+
+    /** Eligibility can be granted or revoked until voting is over. */
+    public static boolean canManageEligibility(ElectionPhase phase) {
+<span class="fc bfc" id="L94" title="All 6 branches covered.">        return phase == ElectionPhase.DRAFT || phase == ElectionPhase.SCHEDULED || phase == ElectionPhase.VOTING;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

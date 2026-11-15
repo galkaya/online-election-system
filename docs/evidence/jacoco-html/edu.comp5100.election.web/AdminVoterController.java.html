@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminVoterController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.web</a> &gt; <span class="el_source">AdminVoterController.java</span></div><h1>AdminVoterController.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.web;
+
+import edu.comp5100.election.service.BusinessRuleException;
+import edu.comp5100.election.service.UserAdminService;
+import java.security.Principal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+/** Voter account administration (FR-02). */
+@Controller
+@RequestMapping(&quot;/admin/voters&quot;)
+public class AdminVoterController {
+
+    private final UserAdminService userAdminService;
+
+<span class="fc" id="L22">    public AdminVoterController(UserAdminService userAdminService) {</span>
+<span class="fc" id="L23">        this.userAdminService = userAdminService;</span>
+<span class="fc" id="L24">    }</span>
+
+    @GetMapping
+    public String voters(Model model) {
+<span class="fc" id="L28">        model.addAttribute(&quot;voters&quot;, userAdminService.listVoters());</span>
+<span class="fc" id="L29">        return &quot;admin/voters&quot;;</span>
+    }
+
+    @PostMapping
+    public String createVoter(@RequestParam(defaultValue = &quot;&quot;) String username,
+            @RequestParam(defaultValue = &quot;&quot;) String displayName, @RequestParam(defaultValue = &quot;&quot;) String password,
+            Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+<span class="nc" id="L37">            userAdminService.createVoter(principal.getName(), username, displayName, password);</span>
+<span class="nc" id="L38">            redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;The voter account was created.&quot;);</span>
+<span class="nc" id="L39">        } catch (BusinessRuleException refused) {</span>
+<span class="nc" id="L40">            redirectAttributes.addFlashAttribute(&quot;error&quot;, refused.getMessage());</span>
+            // Give the non-secret fields back so the administrator does not retype them.
+<span class="nc" id="L42">            redirectAttributes.addFlashAttribute(&quot;enteredUsername&quot;, username);</span>
+<span class="nc" id="L43">            redirectAttributes.addFlashAttribute(&quot;enteredDisplayName&quot;, displayName);</span>
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">        return &quot;redirect:/admin/voters&quot;;</span>
+    }
+
+    @PostMapping(&quot;/{voterId}/enable&quot;)
+    public String enable(@PathVariable long voterId, Principal principal, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L50">        userAdminService.setVoterEnabled(principal.getName(), voterId, true);</span>
+<span class="nc" id="L51">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;The voter account was enabled.&quot;);</span>
+<span class="nc" id="L52">        return &quot;redirect:/admin/voters&quot;;</span>
+    }
+
+    @PostMapping(&quot;/{voterId}/disable&quot;)
+    public String disable(@PathVariable long voterId, Principal principal, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L57">        userAdminService.setVoterEnabled(principal.getName(), voterId, false);</span>
+<span class="nc" id="L58">        redirectAttributes.addFlashAttribute(&quot;success&quot;,</span>
+                &quot;The voter account was disabled. It can no longer sign in or vote.&quot;);
+<span class="nc" id="L60">        return &quot;redirect:/admin/voters&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

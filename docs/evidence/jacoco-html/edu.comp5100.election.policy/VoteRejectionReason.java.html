@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VoteRejectionReason.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.policy</a> &gt; <span class="el_source">VoteRejectionReason.java</span></div><h1>VoteRejectionReason.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.policy;
+
+/** Why a vote attempt was refused, with the English message shown to the voter (FR-11). */
+<span class="fc" id="L4">public enum VoteRejectionReason {</span>
+<span class="fc" id="L5">    ELECTION_NOT_FOUND(&quot;This election does not exist.&quot;),</span>
+<span class="fc" id="L6">    ACCOUNT_NOT_PERMITTED(&quot;This account is not allowed to vote. Only enabled voter accounts can cast ballots.&quot;),</span>
+<span class="fc" id="L7">    NOT_ELIGIBLE(&quot;You are not on the eligibility list for this election.&quot;),</span>
+<span class="fc" id="L8">    ELECTION_NOT_OPEN(&quot;This election has not been opened for voting.&quot;),</span>
+<span class="fc" id="L9">    VOTING_NOT_STARTED(&quot;Voting for this election has not started yet.&quot;),</span>
+<span class="fc" id="L10">    VOTING_ENDED(&quot;The voting period for this election has ended.&quot;),</span>
+<span class="fc" id="L11">    ELECTION_CLOSED(&quot;This election has been closed by the administrator.&quot;),</span>
+<span class="fc" id="L12">    ALREADY_VOTED(&quot;You have already voted in this election. Each voter can vote only once.&quot;),</span>
+<span class="fc" id="L13">    NO_CANDIDATE_SELECTED(&quot;Select one candidate before continuing.&quot;),</span>
+<span class="fc" id="L14">    INVALID_CANDIDATE(&quot;The selected candidate is not on the ballot for this election.&quot;);</span>
+
+    private final String message;
+
+<span class="fc" id="L18">    VoteRejectionReason(String message) {</span>
+<span class="fc" id="L19">        this.message = message;</span>
+<span class="fc" id="L20">    }</span>
+
+    public String message() {
+<span class="fc" id="L23">        return message;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

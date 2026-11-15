@@ -740,11 +740,12 @@ textarea[aria-invalid="true"] {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    white-space: nowrap;
+    vertical-align: bottom;
 }
 
 .table tbody th {
     font-weight: 600;
+    min-width: 11rem;
 }
 
 .table tfoot th,

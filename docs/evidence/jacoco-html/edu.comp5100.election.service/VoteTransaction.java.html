@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VoteTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.service</a> &gt; <span class="el_source">VoteTransaction.java</span></div><h1>VoteTransaction.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.service;
+
+import edu.comp5100.election.domain.Ballot;
+import edu.comp5100.election.domain.Candidate;
+import edu.comp5100.election.domain.Election;
+import edu.comp5100.election.domain.Participation;
+import edu.comp5100.election.domain.Role;
+import edu.comp5100.election.domain.UserAccount;
+import edu.comp5100.election.policy.ReceiptCodec;
+import edu.comp5100.election.policy.VoteContext;
+import edu.comp5100.election.policy.VoteRejectionReason;
+import edu.comp5100.election.policy.VotingPolicy;
+import edu.comp5100.election.repository.BallotRepository;
+import edu.comp5100.election.repository.CandidateRepository;
+import edu.comp5100.election.repository.ElectionEligibilityRepository;
+import edu.comp5100.election.repository.ElectionRepository;
+import edu.comp5100.election.repository.ParticipationRepository;
+import edu.comp5100.election.repository.UserAccountRepository;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * The database transactions of voting (NFR-02, NFR-03).
+ *
+ * &lt;p&gt;Lock order, always the same: (1) the election row, (2) the voter's account row. Closing,
+ * activation and eligibility changes take the election lock; enabling or disabling an account
+ * takes only the account lock. Because nobody takes the locks in the opposite order, there is no
+ * deadlock, and no rule can change between the check and the write.
+ */
+@Component
+public class VoteTransaction {
+
+    private final ElectionRepository electionRepository;
+    private final UserAccountRepository userAccountRepository;
+    private final ElectionEligibilityRepository eligibilityRepository;
+    private final ParticipationRepository participationRepository;
+    private final CandidateRepository candidateRepository;
+    private final BallotRepository ballotRepository;
+    private final ReceiptGenerator receiptGenerator;
+    private final Clock clock;
+
+    public VoteTransaction(ElectionRepository electionRepository, UserAccountRepository userAccountRepository,
+            ElectionEligibilityRepository eligibilityRepository, ParticipationRepository participationRepository,
+            CandidateRepository candidateRepository, BallotRepository ballotRepository,
+<span class="fc" id="L50">            ReceiptGenerator receiptGenerator, Clock clock) {</span>
+<span class="fc" id="L51">        this.electionRepository = electionRepository;</span>
+<span class="fc" id="L52">        this.userAccountRepository = userAccountRepository;</span>
+<span class="fc" id="L53">        this.eligibilityRepository = eligibilityRepository;</span>
+<span class="fc" id="L54">        this.participationRepository = participationRepository;</span>
+<span class="fc" id="L55">        this.candidateRepository = candidateRepository;</span>
+<span class="fc" id="L56">        this.ballotRepository = ballotRepository;</span>
+<span class="fc" id="L57">        this.receiptGenerator = receiptGenerator;</span>
+<span class="fc" id="L58">        this.clock = clock;</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Stores the participation record and the ballot in one transaction, or stores nothing.
+     * Any exception, including a rejection, rolls the whole transaction back.
+     */
+    @Transactional
+    public VoteReceipt castVote(String username, long electionId, Long candidateId) {
+<span class="fc" id="L67">        Election election = electionRepository.findByIdForUpdate(electionId)</span>
+<span class="fc" id="L68">                .orElseThrow(() -&gt; new VoteRejectedException(VoteRejectionReason.ELECTION_NOT_FOUND));</span>
+<span class="fc" id="L69">        Optional&lt;UserAccount&gt; voter = userAccountRepository.findByUsernameForUpdate(username);</span>
+        // The clock is read only after the locks are held, so a vote that waited for a lock is
+        // judged by the time and status that are current when it is actually processed.
+<span class="fc" id="L72">        Instant now = clock.instant();</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        boolean candidateOnBallot = candidateId != null</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">                &amp;&amp; candidateRepository.existsByIdAndElectionId(candidateId, electionId);</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        VoteContext context = contextFor(election, voter, now, candidateId != null, candidateOnBallot);</span>
+<span class="fc" id="L77">        Optional&lt;VoteRejectionReason&gt; rejection = VotingPolicy.evaluate(context);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (rejection.isPresent()) {</span>
+<span class="fc" id="L79">            throw new VoteRejectedException(rejection.get());</span>
+        }
+
+<span class="fc" id="L82">        Long voterId = voter.orElseThrow().getId();</span>
+        try {
+<span class="fc" id="L84">            participationRepository.saveAndFlush(new Participation(electionId, voterId));</span>
+<span class="fc" id="L85">        } catch (DataIntegrityViolationException duplicate) {</span>
+            // The unique constraint on (election_id, voter_id) is the last line of defence.
+<span class="fc" id="L87">            throw new VoteRejectedException(VoteRejectionReason.ALREADY_VOTED);</span>
+<span class="fc" id="L88">        }</span>
+
+<span class="fc" id="L90">        String code = receiptGenerator.newCode();</span>
+<span class="fc" id="L91">        ballotRepository.saveAndFlush(new Ballot(electionId, candidateId, ReceiptCodec.hash(code)));</span>
+<span class="fc" id="L92">        return new VoteReceipt(ReceiptCodec.format(code));</span>
+    }
+
+    /**
+     * Returns the ballot when the voter may vote right now, otherwise throws the rejection.
+     * Read-only: it takes no locks, and the real decision is made again in {@link #castVote}.
+     */
+    @Transactional(readOnly = true)
+    public BallotView loadBallot(String username, long electionId) {
+<span class="fc" id="L101">        Election election = electionRepository.findById(electionId)</span>
+<span class="fc" id="L102">                .orElseThrow(() -&gt; new VoteRejectedException(VoteRejectionReason.ELECTION_NOT_FOUND));</span>
+<span class="fc" id="L103">        Optional&lt;UserAccount&gt; voter = userAccountRepository.findByUsername(username);</span>
+<span class="fc" id="L104">        VoteContext context = contextFor(election, voter, clock.instant(), true, true);</span>
+<span class="fc" id="L105">        Optional&lt;VoteRejectionReason&gt; rejection = VotingPolicy.evaluateAccess(context);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (rejection.isPresent()) {</span>
+<span class="fc" id="L107">            throw new VoteRejectedException(rejection.get());</span>
+        }
+<span class="fc" id="L109">        List&lt;Candidate&gt; candidates = candidateRepository.findByElectionIdOrderByIdAsc(electionId);</span>
+<span class="fc" id="L110">        return new BallotView(election, candidates);</span>
+    }
+
+    private VoteContext contextFor(Election election, Optional&lt;UserAccount&gt; voter, Instant now,
+            boolean candidateSelected, boolean candidateOnBallot) {
+<span class="fc bfc" id="L115" title="All 6 branches covered.">        boolean voterMayVote = voter.isPresent() &amp;&amp; voter.get().isEnabled() &amp;&amp; voter.get().getRole() == Role.VOTER;</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        boolean eligible = voter.isPresent()</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                &amp;&amp; eligibilityRepository.existsByElectionIdAndVoterIdAndActiveTrue(election.getId(), voter.get().getId());</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        boolean alreadyVoted = voter.isPresent()</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                &amp;&amp; participationRepository.existsByElectionIdAndVoterId(election.getId(), voter.get().getId());</span>
+<span class="fc" id="L120">        return new VoteContext(voterMayVote, eligible, election.getStatus(), election.getStartsAt(),</span>
+<span class="fc" id="L121">                election.getEndsAt(), now, alreadyVoted, candidateSelected, candidateOnBallot);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

@@ -38,7 +38,7 @@ public final class Browser implements AutoCloseable {
     public Browser(int port) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1366,1000", "--lang=en-US", "--no-first-run",
-                "--disable-search-engine-choice-screen", "--force-device-scale-factor=1");
+                "--disable-search-engine-choice-screen", "--force-device-scale-factor=1", "--hide-scrollbars");
         options.setExperimentalOption("prefs", Map.of("intl.accept_languages", "en-US,en"));
         this.driver = new ChromeDriver(options);
         this.wait = new WebDriverWait(driver, TIMEOUT);

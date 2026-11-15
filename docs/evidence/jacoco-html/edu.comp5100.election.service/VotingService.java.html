@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VotingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.service</a> &gt; <span class="el_source">VotingService.java</span></div><h1>VotingService.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.service;
+
+import edu.comp5100.election.policy.VoteRejectionReason;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+
+/**
+ * Entry point for voting (FR-09 to FR-12). This class is deliberately not transactional: it runs
+ * the voting transaction, and only after that transaction has finished (committed or rolled back)
+ * does it write the audit record of a rejection in a separate transaction (NFR-11).
+ */
+@Service
+public class VotingService {
+
+<span class="fc" id="L17">    private static final Logger log = LoggerFactory.getLogger(VotingService.class);</span>
+
+    private final VoteTransaction voteTransaction;
+    private final AuditService auditService;
+
+<span class="fc" id="L22">    public VotingService(VoteTransaction voteTransaction, AuditService auditService) {</span>
+<span class="fc" id="L23">        this.voteTransaction = voteTransaction;</span>
+<span class="fc" id="L24">        this.auditService = auditService;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Casts one vote for the authenticated voter.
+     *
+     * @throws VoteRejectedException when a voting rule refuses the vote; nothing is stored
+     * @throws VoteNotProcessedException when the database could not process the vote; nothing is stored
+     */
+    public VoteReceipt castVote(String username, long electionId, Long candidateId) {
+        try {
+<span class="fc" id="L35">            return voteTransaction.castVote(username, electionId, candidateId);</span>
+<span class="fc" id="L36">        } catch (VoteRejectedException rejected) {</span>
+<span class="fc" id="L37">            auditRejection(username, electionId, rejected.reason(), AuditService.STAGE_VOTE_SUBMISSION);</span>
+<span class="fc" id="L38">            throw rejected;</span>
+<span class="fc" id="L39">        } catch (DataAccessException technicalFailure) {</span>
+            // Lock timeout or an unexpected constraint failure. The transaction has rolled back.
+<span class="fc" id="L41">            log.warn(&quot;A vote could not be processed and was rolled back: {}&quot;,</span>
+<span class="fc" id="L42">                    technicalFailure.getClass().getSimpleName());</span>
+<span class="fc" id="L43">            throw new VoteNotProcessedException(technicalFailure);</span>
+        }
+    }
+
+    /** Opens the ballot for the authenticated voter, or throws the reason why voting is not possible. */
+    public BallotView openBallot(String username, long electionId) {
+        try {
+<span class="fc" id="L50">            return voteTransaction.loadBallot(username, electionId);</span>
+<span class="fc" id="L51">        } catch (VoteRejectedException rejected) {</span>
+<span class="fc" id="L52">            auditRejection(username, electionId, rejected.reason(), AuditService.STAGE_BALLOT_REQUEST);</span>
+<span class="fc" id="L53">            throw rejected;</span>
+        }
+    }
+
+    /**
+     * An audit failure is logged and swallowed on purpose: the vote has already been refused and
+     * rolled back, and a broken audit log must never turn that refusal into anything else.
+     */
+    private void auditRejection(String username, long electionId, VoteRejectionReason reason, String stage) {
+        try {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            Long auditedElectionId = reason == VoteRejectionReason.ELECTION_NOT_FOUND ? null : electionId;</span>
+<span class="fc" id="L64">            auditService.recordRejection(username, auditedElectionId, reason, stage);</span>
+<span class="fc" id="L65">        } catch (RuntimeException auditFailure) {</span>
+<span class="fc" id="L66">            log.error(&quot;The audit record of a rejected vote attempt could not be stored (reason {}).&quot;, reason,</span>
+                    auditFailure);
+<span class="fc" id="L68">        }</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

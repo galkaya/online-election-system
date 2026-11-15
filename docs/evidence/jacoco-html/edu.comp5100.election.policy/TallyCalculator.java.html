@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TallyCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.policy</a> &gt; <span class="el_source">TallyCalculator.java</span></div><h1>TallyCalculator.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.policy;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Counts ballots (FR-14). The input is the candidate id of every stored ballot; there are no
+ * separate counters that could drift away from the ballots.
+ */
+public final class TallyCalculator {
+
+    private TallyCalculator() {
+    }
+
+    public static TallyResult tally(List&lt;CandidateOption&gt; candidates, Collection&lt;Long&gt; ballotCandidateIds) {
+<span class="fc" id="L18">        Map&lt;Long, Long&gt; votesByCandidate = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        for (CandidateOption candidate : candidates) {</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">            if (votesByCandidate.put(candidate.id(), 0L) != null) {</span>
+<span class="fc" id="L21">                throw new IllegalArgumentException(&quot;Candidate listed twice: &quot; + candidate.id());</span>
+            }
+<span class="fc" id="L23">        }</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        for (Long candidateId : ballotCandidateIds) {</span>
+<span class="fc bfc" id="L25" title="All 4 branches covered.">            if (candidateId == null || !votesByCandidate.containsKey(candidateId)) {</span>
+<span class="fc" id="L26">                throw new IllegalStateException(&quot;A stored ballot names a candidate that is not on this ballot.&quot;);</span>
+            }
+<span class="fc" id="L28">            votesByCandidate.merge(candidateId, 1L, Long::sum);</span>
+<span class="fc" id="L29">        }</span>
+
+<span class="fc" id="L31">        long totalVotes = ballotCandidateIds.size();</span>
+<span class="fc" id="L32">        List&lt;CandidateTally&gt; rows = candidates.stream()</span>
+<span class="fc" id="L33">                .map(candidate -&gt; {</span>
+<span class="fc" id="L34">                    long votes = votesByCandidate.get(candidate.id());</span>
+<span class="fc" id="L35">                    return new CandidateTally(candidate.id(), candidate.name(), votes, percent(votes, totalVotes));</span>
+                })
+<span class="fc" id="L37">                .toList();</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (totalVotes == 0) {</span>
+<span class="fc" id="L40">            return new TallyResult(rows, 0, TallyOutcome.NO_VOTES, List.of());</span>
+        }
+<span class="fc" id="L42">        long highest = rows.stream().mapToLong(CandidateTally::votes).max().orElse(0);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        List&lt;CandidateTally&gt; leaders = rows.stream().filter(row -&gt; row.votes() == highest).toList();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        TallyOutcome outcome = leaders.size() == 1 ? TallyOutcome.WINNER : TallyOutcome.TIE;</span>
+<span class="fc" id="L45">        return new TallyResult(rows, totalVotes, outcome, leaders);</span>
+    }
+
+    /** Share of the total as a percentage with one decimal place. */
+    public static double percent(long votes, long totalVotes) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (totalVotes == 0) {</span>
+<span class="fc" id="L51">            return 0.0;</span>
+        }
+<span class="fc" id="L53">        return Math.round(votes * 1000.0 / totalVotes) / 10.0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActivationProblem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.policy</a> &gt; <span class="el_source">ActivationProblem.java</span></div><h1>ActivationProblem.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.policy;
+
+/** Reasons why a draft election cannot be activated (FR-06). */
+<span class="fc" id="L4">public enum ActivationProblem {</span>
+<span class="fc" id="L5">    NOT_A_DRAFT(&quot;Only a draft election can be activated.&quot;),</span>
+<span class="fc" id="L6">    INVALID_WINDOW(&quot;The start time must be before the end time.&quot;),</span>
+<span class="fc" id="L7">    DEADLINE_PASSED(&quot;The end time has already passed. Choose a later end time before activating.&quot;),</span>
+<span class="fc" id="L8">    TOO_FEW_CANDIDATES(&quot;At least two candidates with different names are required.&quot;);</span>
+
+    private final String message;
+
+<span class="fc" id="L12">    ActivationProblem(String message) {</span>
+<span class="fc" id="L13">        this.message = message;</span>
+<span class="fc" id="L14">    }</span>
+
+    public String message() {
+<span class="fc" id="L17">        return message;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

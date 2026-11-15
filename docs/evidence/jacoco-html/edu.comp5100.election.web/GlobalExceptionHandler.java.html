@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.web</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.web;
+
+import edu.comp5100.election.service.BusinessRuleException;
+import edu.comp5100.election.service.NotFoundException;
+import edu.comp5100.election.service.ResultsNotAvailableException;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+/**
+ * Turns expected failures into plain English pages (FR-11, NFR-04). No handler exposes an
+ * exception message from a framework or a stack trace. Unexpected exceptions fall through to
+ * Spring Boot's error handling, which renders error.html with status 500 and no details.
+ */
+@ControllerAdvice
+<span class="fc" id="L19">public class GlobalExceptionHandler {</span>
+
+    @ExceptionHandler(NotFoundException.class)
+    public String notFound(NotFoundException notFound, Model model, HttpServletResponse response) {
+<span class="fc" id="L23">        return errorPage(model, response, HttpServletResponse.SC_NOT_FOUND, notFound.getMessage());</span>
+    }
+
+    @ExceptionHandler(ResultsNotAvailableException.class)
+    public String resultsNotAvailable(ResultsNotAvailableException notAvailable, Model model,
+            HttpServletResponse response) {
+<span class="fc" id="L29">        response.setStatus(HttpServletResponse.SC_FORBIDDEN);</span>
+<span class="fc" id="L30">        return &quot;results-unavailable&quot;;</span>
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public String businessRule(BusinessRuleException refused, Model model, HttpServletResponse response) {
+<span class="nc" id="L35">        return errorPage(model, response, HttpServletResponse.SC_CONFLICT, refused.getMessage());</span>
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class})
+    public String badRequest(Model model, HttpServletResponse response) {
+<span class="fc" id="L40">        return errorPage(model, response, HttpServletResponse.SC_BAD_REQUEST,</span>
+                &quot;The request contains a missing or invalid value.&quot;);
+    }
+
+    private static String errorPage(Model model, HttpServletResponse response, int status, String message) {
+<span class="fc" id="L45">        response.setStatus(status);</span>
+<span class="fc" id="L46">        model.addAttribute(&quot;status&quot;, status);</span>
+<span class="fc" id="L47">        model.addAttribute(&quot;safeMessage&quot;, message);</span>
+<span class="fc" id="L48">        return &quot;error&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>

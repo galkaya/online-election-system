@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminElectionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Online Election System</a> &gt; <a href="index.source.html" class="el_package">edu.comp5100.election.web</a> &gt; <span class="el_source">AdminElectionController.java</span></div><h1>AdminElectionController.java</h1><pre class="source lang-java linenums">package edu.comp5100.election.web;
+
+import edu.comp5100.election.domain.Election;
+import edu.comp5100.election.service.BusinessRuleException;
+import edu.comp5100.election.service.ElectionAdminDetail;
+import edu.comp5100.election.service.ElectionAdminService;
+import edu.comp5100.election.service.ElectionQueryService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import java.security.Principal;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+/**
+ * Election administration pages (FR-03 to FR-06). Access is restricted to ADMIN by the security
+ * configuration; every state change is a POST protected by a CSRF token.
+ */
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+public class AdminElectionController {
+
+    private final ElectionAdminService electionAdminService;
+    private final ElectionQueryService electionQueryService;
+    private final DisplayTime displayTime;
+    private final Clock clock;
+
+    public AdminElectionController(ElectionAdminService electionAdminService,
+<span class="fc" id="L41">            ElectionQueryService electionQueryService, DisplayTime displayTime, Clock clock) {</span>
+<span class="fc" id="L42">        this.electionAdminService = electionAdminService;</span>
+<span class="fc" id="L43">        this.electionQueryService = electionQueryService;</span>
+<span class="fc" id="L44">        this.displayTime = displayTime;</span>
+<span class="fc" id="L45">        this.clock = clock;</span>
+<span class="fc" id="L46">    }</span>
+
+    @GetMapping
+    public String dashboard(Model model) {
+<span class="fc" id="L50">        model.addAttribute(&quot;elections&quot;, electionQueryService.listOverviews());</span>
+<span class="fc" id="L51">        return &quot;admin/dashboard&quot;;</span>
+    }
+
+    @GetMapping(&quot;/elections/new&quot;)
+    public String newElection(Model model) {
+<span class="fc" id="L56">        ElectionForm form = new ElectionForm();</span>
+<span class="fc" id="L57">        Instant start = clock.instant().truncatedTo(ChronoUnit.MINUTES);</span>
+<span class="fc" id="L58">        form.setStartsAt(displayTime.toInput(start));</span>
+<span class="fc" id="L59">        form.setEndsAt(displayTime.toInput(start.plus(Duration.ofDays(1))));</span>
+<span class="fc" id="L60">        model.addAttribute(&quot;electionForm&quot;, form);</span>
+<span class="fc" id="L61">        return &quot;admin/election-form&quot;;</span>
+    }
+
+    @PostMapping(&quot;/elections&quot;)
+    public String createElection(@Valid @ModelAttribute(&quot;electionForm&quot;) ElectionForm form, BindingResult binding,
+            Principal principal, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+<span class="fc" id="L67">        Instant[] window = parseWindow(form, binding);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (binding.hasErrors()) {</span>
+<span class="fc" id="L69">            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);</span>
+<span class="fc" id="L70">            return &quot;admin/election-form&quot;;</span>
+        }
+<span class="fc" id="L72">        Election election = electionAdminService.createElection(principal.getName(), form.getTitle(),</span>
+<span class="fc" id="L73">                form.getDescription(), window[0], window[1]);</span>
+<span class="fc" id="L74">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;The draft election was created. Add at least two &quot;</span>
+                + &quot;candidates and the eligible voters, then activate it.&quot;);
+<span class="fc" id="L76">        return &quot;redirect:/admin/elections/&quot; + election.getId();</span>
+    }
+
+    @GetMapping(&quot;/elections/{electionId}&quot;)
+    public String detail(@PathVariable long electionId, Model model) {
+<span class="fc" id="L81">        ElectionAdminDetail detail = electionQueryService.adminDetail(electionId);</span>
+<span class="fc" id="L82">        model.addAttribute(&quot;detail&quot;, detail);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (!model.containsAttribute(&quot;electionForm&quot;)) {</span>
+<span class="fc" id="L84">            Election election = detail.overview().election();</span>
+<span class="fc" id="L85">            ElectionForm form = new ElectionForm();</span>
+<span class="fc" id="L86">            form.setTitle(election.getTitle());</span>
+<span class="fc" id="L87">            form.setDescription(election.getDescription());</span>
+<span class="fc" id="L88">            form.setStartsAt(displayTime.toInput(election.getStartsAt()));</span>
+<span class="fc" id="L89">            form.setEndsAt(displayTime.toInput(election.getEndsAt()));</span>
+<span class="fc" id="L90">            model.addAttribute(&quot;electionForm&quot;, form);</span>
+        }
+<span class="fc" id="L92">        return &quot;admin/election-detail&quot;;</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/update&quot;)
+    public String updateElection(@PathVariable long electionId,
+            @Valid @ModelAttribute(&quot;electionForm&quot;) ElectionForm form, BindingResult binding, Principal principal,
+            Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L99">        Instant[] window = parseWindow(form, binding);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (binding.hasErrors()) {</span>
+<span class="nc" id="L101">            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);</span>
+<span class="nc" id="L102">            return detail(electionId, model);</span>
+        }
+<span class="nc" id="L104">        return change(electionId, redirectAttributes, &quot;The election details were saved.&quot;,</span>
+<span class="nc" id="L105">                () -&gt; electionAdminService.updateDraft(principal.getName(), electionId, form.getTitle(),</span>
+<span class="nc" id="L106">                        form.getDescription(), window[0], window[1]));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/candidates&quot;)
+    public String addCandidate(@PathVariable long electionId, @RequestParam(defaultValue = &quot;&quot;) String name,
+            @RequestParam(defaultValue = &quot;&quot;) String biography, Principal principal,
+            RedirectAttributes redirectAttributes) {
+<span class="fc" id="L113">        return change(electionId, redirectAttributes, &quot;The candidate was added.&quot;,</span>
+<span class="fc" id="L114">                () -&gt; electionAdminService.addCandidate(principal.getName(), electionId, name, biography));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/candidates/{candidateId}/remove&quot;)
+    public String removeCandidate(@PathVariable long electionId, @PathVariable long candidateId, Principal principal,
+            RedirectAttributes redirectAttributes) {
+<span class="nc" id="L120">        return change(electionId, redirectAttributes, &quot;The candidate was removed.&quot;,</span>
+<span class="nc" id="L121">                () -&gt; electionAdminService.removeCandidate(principal.getName(), electionId, candidateId));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/eligibility/{voterId}/grant&quot;)
+    public String grantEligibility(@PathVariable long electionId, @PathVariable long voterId, Principal principal,
+            RedirectAttributes redirectAttributes) {
+<span class="nc" id="L127">        return change(electionId, redirectAttributes, &quot;The voter is now eligible for this election.&quot;,</span>
+<span class="nc" id="L128">                () -&gt; electionAdminService.grantEligibility(principal.getName(), electionId, voterId));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/eligibility/{voterId}/revoke&quot;)
+    public String revokeEligibility(@PathVariable long electionId, @PathVariable long voterId, Principal principal,
+            RedirectAttributes redirectAttributes) {
+<span class="nc" id="L134">        return change(electionId, redirectAttributes, &quot;The voter is no longer eligible for this election.&quot;,</span>
+<span class="nc" id="L135">                () -&gt; electionAdminService.revokeEligibility(principal.getName(), electionId, voterId));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/activate&quot;)
+    public String activate(@PathVariable long electionId, Principal principal,
+            RedirectAttributes redirectAttributes) {
+<span class="fc" id="L141">        return change(electionId, redirectAttributes,</span>
+                &quot;The election was activated. Votes are accepted inside the voting window.&quot;,
+<span class="nc" id="L143">                () -&gt; electionAdminService.activate(principal.getName(), electionId));</span>
+    }
+
+    @PostMapping(&quot;/elections/{electionId}/close&quot;)
+    public String close(@PathVariable long electionId, Principal principal, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L148">        return change(electionId, redirectAttributes,</span>
+                &quot;The election was closed. No further votes are accepted and the results are published.&quot;,
+<span class="nc" id="L150">                () -&gt; electionAdminService.close(principal.getName(), electionId));</span>
+    }
+
+    /** Runs one administrative change and redirects back to the election page with a message. */
+    private String change(long electionId, RedirectAttributes redirectAttributes, String successMessage,
+            Runnable action) {
+        try {
+<span class="fc" id="L157">            action.run();</span>
+<span class="fc" id="L158">            redirectAttributes.addFlashAttribute(&quot;success&quot;, successMessage);</span>
+<span class="fc" id="L159">        } catch (BusinessRuleException refused) {</span>
+<span class="fc" id="L160">            redirectAttributes.addFlashAttribute(&quot;error&quot;, refused.getMessage());</span>
+<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">        return &quot;redirect:/admin/elections/&quot; + electionId;</span>
+    }
+
+    /** Parses both date-time fields; adds field errors and returns null entries when they are invalid. */
+    private Instant[] parseWindow(ElectionForm form, BindingResult binding) {
+<span class="fc" id="L167">        Instant startsAt = parseField(form.getStartsAt(), &quot;startsAt&quot;, binding);</span>
+<span class="fc" id="L168">        Instant endsAt = parseField(form.getEndsAt(), &quot;endsAt&quot;, binding);</span>
+<span class="pc bpc" id="L169" title="1 of 6 branches missed.">        if (startsAt != null &amp;&amp; endsAt != null &amp;&amp; !startsAt.isBefore(endsAt)) {</span>
+<span class="fc" id="L170">            binding.rejectValue(&quot;endsAt&quot;, &quot;window&quot;, &quot;The end time must be after the start time.&quot;);</span>
+        }
+<span class="fc" id="L172">        return new Instant[] {startsAt, endsAt};</span>
+    }
+
+    private Instant parseField(String text, String field, BindingResult binding) {
+<span class="pc bpc" id="L176" title="1 of 4 branches missed.">        if (binding.hasFieldErrors(field) || text == null) {</span>
+<span class="fc" id="L177">            return null;</span>
+        }
+        try {
+<span class="fc" id="L180">            return displayTime.parseInput(text);</span>
+<span class="fc" id="L181">        } catch (DateTimeParseException invalid) {</span>
+<span class="fc" id="L182">            binding.rejectValue(field, &quot;datetime&quot;, &quot;This is not a real date and time.&quot;);</span>
+<span class="fc" id="L183">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>
