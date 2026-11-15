@@ -52,7 +52,7 @@ function Get-Coverage([string]$csvPath, [string]$packageFilter) {
 }
 
 function Get-Mutations([string]$csvPath) {
-    $counts = @{ KILLED = 0; SURVIVED = 0; NO_COVERAGE = 0; TIMED_OUT = 0 }
+    $counts = @{ KILLED = 0 }
     $total = 0
     foreach ($line in Get-Content $csvPath) {
         $status = ($line -split ',')[5]
@@ -61,7 +61,11 @@ function Get-Mutations([string]$csvPath) {
         $total++
     }
     $killedPercent = [Math]::Round(100.0 * $counts.KILLED / $total, 1)
-    return "$total mutants: $($counts.KILLED) killed ($killedPercent%), $($counts.TIMED_OUT) timed out, $($counts.SURVIVED) survived, $($counts.NO_COVERAGE) no coverage"
+    # Every other status that PIT reported (survived, no coverage, timed out, memory error, ...).
+    $others = ($counts.GetEnumerator() | Where-Object { $_.Key -ne 'KILLED' } | Sort-Object Key |
+        ForEach-Object { "$($_.Value) $($_.Key.ToLower().Replace('_', ' '))" }) -join ', '
+    if (-not $others) { $others = 'none in any other state' }
+    return "$total mutants: $($counts.KILLED) killed ($killedPercent%), $others"
 }
 
 $results = [ordered]@{}
@@ -114,8 +118,9 @@ $lines = @(
     "| PIT, ``policy`` package | $($results.baseline.Mutations) | $($results.expanded.Mutations) |",
     "| PIT wall-clock time | $($results.baseline.PitSeconds) s | $($results.expanded.PitSeconds) s |",
     '',
-    'Timed-out mutants are listed separately and are not counted as killed here, although PIT itself',
-    'adds them to its "killed" percentage. Raw reports are next to this file.'
+    'Mutants that ended in a timeout or a memory error (a mutation that creates an endless loop ends',
+    'in one or the other, depending on the run) are listed separately and are not counted as killed',
+    'here, although PIT adds them to its own "killed" percentage. Raw reports are next to this file.'
 )
 $lines | Out-File -Encoding utf8 (Join-Path $out 'summary.md')
 Get-Content (Join-Path $out 'summary.md')
