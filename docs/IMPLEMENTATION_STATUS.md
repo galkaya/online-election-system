@@ -8,7 +8,8 @@ Last update: 2026-11-15, commit `82ccd66` plus the documents written after it.
 - No JDK or Maven was installed on the laptop. With the owner's approval, a portable Eclipse
   Temurin JDK 21.0.13 was downloaded from Adoptium, its SHA-256 checksum was verified, and it was
   unpacked to `%USERPROFILE%\.jdks\temurin-21`. No system setting, PATH entry or registry key was
-  changed. The downloaded zip file is still in `%USERPROFILE%\.jdks` and can be deleted.
+  changed. The downloaded zip file was deleted after unpacking. To remove the JDK again, delete
+  that folder.
 - Maven 3.9.16 is downloaded by the Maven Wrapper on first use.
 - Google Chrome 157 and Git 2.56 were already installed.
 - A local Git repository was created in the project folder (`core.longpaths` enabled for this
