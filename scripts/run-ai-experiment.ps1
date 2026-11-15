@@ -14,6 +14,10 @@ if (-not $env:JAVA_HOME) {
 }
 if (-not $env:JAVA_HOME) { Write-Error 'JAVA_HOME is not set. Install JDK 21 and set JAVA_HOME.' }
 
+# Record the source state now, before this script writes any report file into the project.
+$commit = (& git rev-parse --short HEAD 2>$null)
+$dirty = if ((& git status --porcelain 2>$null)) { ' (with uncommitted changes)' } else { ' (clean working tree)' }
+
 $out = Join-Path $projectRoot 'docs\evidence\ai-experiment'
 New-Item -ItemType Directory -Force $out | Out-Null
 
@@ -88,8 +92,6 @@ foreach ($suite in @('baseline', 'expanded')) {
     }
 }
 
-$commit = (& git rev-parse --short HEAD 2>$null)
-$dirty = if ((& git status --porcelain 2>$null)) { ' (with uncommitted changes)' } else { '' }
 # Read the version from the JDK's "release" file. Calling "java -version" writes to stderr, which
 # Windows PowerShell 5.1 turns into an error when it is redirected.
 $javaVersion = ((Get-Content (Join-Path $env:JAVA_HOME 'release') | Where-Object { $_ -like 'JAVA_VERSION=*' }) -replace 'JAVA_VERSION=', '') -replace '"', ''
