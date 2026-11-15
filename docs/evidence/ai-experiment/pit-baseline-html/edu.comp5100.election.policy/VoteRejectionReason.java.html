@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>VoteRejectionReason.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package edu.comp5100.election.policy;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/** Why a vote attempt was refused, with the English message shown to the voter (FR-11). */</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>public enum VoteRejectionReason {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ELECTION_NOT_FOUND(&#34;This election does not exist.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ACCOUNT_NOT_PERMITTED(&#34;This account is not allowed to vote. Only enabled voter accounts can cast ballots.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    NOT_ELIGIBLE(&#34;You are not on the eligibility list for this election.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ELECTION_NOT_OPEN(&#34;This election has not been opened for voting.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    VOTING_NOT_STARTED(&#34;Voting for this election has not started yet.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    VOTING_ENDED(&#34;The voting period for this election has ended.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ELECTION_CLOSED(&#34;This election has been closed by the administrator.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ALREADY_VOTED(&#34;You have already voted in this election. Each voter can vote only once.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    NO_CANDIDATE_SELECTED(&#34;Select one candidate before continuing.&#34;),</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    INVALID_CANDIDATE(&#34;The selected candidate is not on the ballot for this election.&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private final String message;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    VoteRejectionReason(String message) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.message = message;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String message() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_23'/>
+23
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_23'>1</a>
+<span>
+
+1. message : replaced return value with &#34;&#34; for edu/comp5100/election/policy/VoteRejectionReason::message &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return message;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5615f82d_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5615f82d_23'>23</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5615f82d_23'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>message<br/><b>Killed by : </b>none</span></span> replaced return value with &#34;&#34; for edu/comp5100/election/policy/VoteRejectionReason::message &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=edu.comp5100.election.policy.VoteRejectionReason,-method=message,-methodDesc=()Ljava/lang/String;],-indexes=[5],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=edu.comp5100.election.policy.VoteRejectionReason,-method=message,-methodDesc=()Ljava/lang/String;],-indexes=[5],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=edu.comp5100.election.policy.VoteRejectionReason,-method=message,-methodDesc=()Ljava/lang/String;],-indexes=[5],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:unknownElectionIsAuditedWithoutElectionId()]</li> <li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:rejectedVoteIsAuditedAndRethrown()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:disabledAccountIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:unknownAccountIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:unknownElectionIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ineligibleVoterIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:administratorCannotVote()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:candidateOfAnotherElectionIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:duplicateVoteWritesNothing()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:missingCandidateIsRefused()]</li> <li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:auditFailureDoesNotMaskTheRejection()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:closedElectionIsRefused()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsRefusedAfterVoting()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:clockDecidesTheWindow()]</li> <li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:refusedBallotRequestIsAudited()]</li> <li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:constraintViolationIsTreatedAsDuplicate()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+
+<li class='mutator'>EMPTY_RETURNS</li>
+
+<li class='mutator'>FALSE_RETURNS</li>
+
+<li class='mutator'>INCREMENTS</li>
+
+<li class='mutator'>INVERT_NEGS</li>
+
+<li class='mutator'>MATH</li>
+
+<li class='mutator'>NULL_RETURNS</li>
+
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+
+<li class='mutator'>TRUE_RETURNS</li>
+
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:unknownElectionIsAuditedWithoutElectionId()] (2 ms)</li><li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:rejectedVoteIsAuditedAndRethrown()] (3 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:disabledAccountIsRefused()] (4 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:unknownAccountIsRefused()] (4 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:unknownElectionIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ineligibleVoterIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:administratorCannotVote()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:candidateOfAnotherElectionIsRefused()] (4 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:duplicateVoteWritesNothing()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:missingCandidateIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:auditFailureDoesNotMaskTheRejection()] (9 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:closedElectionIsRefused()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsRefusedAfterVoting()] (12 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:clockDecidesTheWindow()] (10 ms)</li><li>edu.comp5100.election.unit.VotingServiceTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingServiceTest]/[method:refusedBallotRequestIsAudited()] (71 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:constraintViolationIsTreatedAsDuplicate()] (537 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.2 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

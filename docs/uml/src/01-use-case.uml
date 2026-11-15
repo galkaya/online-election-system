@@ -1,0 +1,44 @@
+# Use-case diagram. Shared use cases sit in the middle column so that actor lines do not cross.
+diagram|01-use-case|Use-case diagram: Online Election System|1400|800
+frame|system|230|20|900|760|Online Election System
+actor|voter|80|345|Voter
+actor|visitor|80|630|Anonymous visitor
+actor|admin|1290|365|Administrator
+
+usecase|uc_login|530|60|220|44|Sign in and sign out
+usecase|uc_list|260|300|220|44|See my elections and;participation status
+usecase|uc_vote|260|380|220|44|Vote for one candidate
+usecase|uc_code|260|440|220|44|Receive confirmation;code (shown once)
+usecase|uc_verify|260|640|220|44|Verify a confirmation code
+usecase|uc_window|530|380|220|44|Check eligibility and;voting window
+usecase|uc_reject|530|460|220|44|Reject invalid or;duplicate vote
+usecase|uc_results|530|700|220|44|View results after;the election has ended
+note|n_clock|530|270|220|52|The server clock decides the;voting window (FR-07).
+
+usecase|uc_accounts|800|118|220|44|Manage voter accounts
+usecase|uc_elections|800|263|220|44|Create and edit;draft elections
+usecase|uc_candidates|800|323|220|44|Manage candidates
+usecase|uc_eligibility|800|383|220|44|Manage voter eligibility
+usecase|uc_activate|800|443|220|44|Activate election
+usecase|uc_close|800|503|220|44|Close election
+usecase|uc_audit|800|638|220|44|Review audit log
+
+edge|voter|uc_login||assoc
+edge|voter|uc_list||assoc
+edge|voter|uc_vote||assoc
+edge|voter|uc_results||assoc
+edge|voter|uc_verify||assoc
+edge|visitor|uc_verify||assoc
+edge|admin|uc_login||assoc
+edge|admin|uc_accounts||assoc
+edge|admin|uc_elections||assoc
+edge|admin|uc_candidates||assoc
+edge|admin|uc_eligibility||assoc
+edge|admin|uc_activate||assoc
+edge|admin|uc_close||assoc
+edge|admin|uc_audit||assoc
+edge|admin|uc_results||assoc
+edge|uc_vote|uc_window|«include»|dashed
+edge|uc_vote|uc_code|«include»|dashed
+edge|uc_reject|uc_vote|«extend»|dashed
+edge|n_clock|uc_window||dashed

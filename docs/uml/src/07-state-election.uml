@@ -1,0 +1,18 @@
+# Administrative status of an election and the phases derived from the clock.
+diagram|07-state-election|State diagram: election life cycle|1080|430
+start|s0|50|78
+state|DRAFT|160|60|150|60|DRAFT
+state|OPEN|470|60|150|60|OPEN
+state|CLOSED|800|60|150|60|CLOSED
+end|s9|1010|78
+note|n_draft|90|200|290|100|Title, schedule and candidates can change.;Eligibility can change.;Not visible to voters. No votes.;Activation needs: at least 2 candidates,;valid window, now < endsAt.
+note|n_open|410|200|300|130|Setup is locked. Phase by the server clock:;now < startsAt: "Not started", no votes;startsAt <= now < endsAt: "Voting open";now >= endsAt: "Voting ended", no votes,;results are shown;Eligibility can change until voting is over.
+note|n_closed|740|200|290|80|Final: never reopened.;No votes. Results are shown.;Eligibility is frozen.
+
+edge|s0|DRAFT|create|arrow
+edge|DRAFT|OPEN|activate;(administrator)|arrow
+edge|OPEN|CLOSED|close;(administrator)|arrow
+edge|CLOSED|s9||arrow
+edge|n_draft|DRAFT||dashed
+edge|n_open|OPEN||dashed
+edge|n_closed|CLOSED||dashed

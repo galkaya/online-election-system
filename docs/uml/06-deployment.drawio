@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="UmlGenerator" version="24.0.0">
+  <diagram id="06-deployment" name="Deployment diagram: local demo">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="laptop" value="«device»  Demo laptop" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;size=12;verticalAlign=top;align=left;spacingLeft=6;fontStyle=1;fillColor=#eef2ff;" vertex="1" parent="1">
+          <mxGeometry x="30" y="40" width="1060" height="490" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_browser" value="«execution environment»  Web browser" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;size=12;verticalAlign=top;align=left;spacingLeft=6;fontStyle=1;fillColor=#eef2ff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="110" width="270" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="pages" value="HTML pages and app.css&lt;br/&gt;(no external resources)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="90" y="170" width="230" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_jvm" value="«execution environment»  Java 21 JVM" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;size=12;verticalAlign=top;align=left;spacingLeft=6;fontStyle=1;fillColor=#eef2ff;" vertex="1" parent="1">
+          <mxGeometry x="420" y="110" width="380" height="390" as="geometry"/>
+        </mxCell>
+        <mxCell id="jar" value="«artifact» online-election-system-1.0.0.jar" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="340" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="tomcat" value="Embedded Tomcat, port 8080&lt;br/&gt;Spring MVC, Spring Security, Thymeleaf" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="440" y="235" width="340" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="services" value="Services and policy rules" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="440" y="320" width="340" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="Embedded H2 engine, HikariCP pool&lt;br/&gt;Flyway migration at start-up" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="440" y="395" width="340" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_disk" value="«device»  Local disk" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;size=12;verticalAlign=top;align=left;spacingLeft=6;fontStyle=1;fillColor=#eef2ff;" vertex="1" parent="1">
+          <mxGeometry x="860" y="330" width="200" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="dbfile" value="data/demo/&lt;br/&gt;election-demo.mv.db" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f7fb;" vertex="1" parent="1">
+          <mxGeometry x="880" y="400" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_tests" value="Automated tests start&lt;br/&gt;the same application with&lt;br/&gt;an in-memory H2 database&lt;br/&gt;on a random port.&lt;br/&gt;System tests add Selenium&lt;br/&gt;and headless Chrome." style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=6;fillColor=#fff8dc;" vertex="1" parent="1">
+          <mxGeometry x="860" y="110" width="200" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="HTTP on localhost&lt;br/&gt;session cookie, CSRF token" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="pages" target="tomcat">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="tomcat" target="services">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="JDBC" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="services" target="h2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="file access" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="h2" target="dbfile">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

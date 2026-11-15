@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="770" viewBox="0 0 1400 770" role="img" aria-label="Class diagram: controllers, services and policy rules">
+<title>Class diagram: controllers, services and policy rules</title>
+<defs>
+<marker id="open" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9" fill="none" stroke="#111" stroke-width="1.2"/></marker>
+<marker id="solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9 Z" fill="#111"/></marker>
+<marker id="hollow" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 Z" fill="#fff" stroke="#111"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="620" y="370" width="750" height="240" stroke="#111" fill="none"/>
+<text x="630" y="388" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#111">policy package (pure rules: no Spring, no database)</text>
+<rect x="40" y="40" width="230" height="95" stroke="#111" fill="#fff"/>
+<text x="155" y="57" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«controller»</text>
+<text x="155" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">VoterController</text>
+<line x1="40" y1="79" x2="270" y2="79" stroke="#111"/>
+<text x="48" y="95" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">dashboard(), ballot(), review()</text>
+<text x="48" y="110" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">vote(), confirmation()</text>
+<rect x="300" y="40" width="260" height="95" stroke="#111" fill="#fff"/>
+<text x="430" y="57" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«controller»</text>
+<text x="430" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">AdminElectionController</text>
+<line x1="300" y1="79" x2="560" y2="79" stroke="#111"/>
+<text x="308" y="95" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">createElection(), updateElection()</text>
+<text x="308" y="110" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">addCandidate(), activate(), close()</text>
+<text x="308" y="125" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">grantEligibility(), revokeEligibility()</text>
+<rect x="580" y="40" width="200" height="65" stroke="#111" fill="#fff"/>
+<text x="680" y="57" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«controller»</text>
+<text x="680" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ReceiptController</text>
+<line x1="580" y1="79" x2="780" y2="79" stroke="#111"/>
+<text x="588" y="95" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">verify(code)</text>
+<rect x="810" y="40" width="230" height="95" stroke="#111" fill="#fff"/>
+<text x="925" y="57" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«controller»</text>
+<text x="925" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Other controllers</text>
+<line x1="810" y1="79" x2="1040" y2="79" stroke="#111"/>
+<text x="818" y="95" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">ResultsController</text>
+<text x="818" y="110" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">AdminVoterController</text>
+<text x="818" y="125" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">AdminAuditController, HomeController</text>
+<rect x="40" y="220" width="230" height="80" stroke="#111" fill="#fff"/>
+<text x="155" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="155" y="252" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">VotingService</text>
+<line x1="40" y1="259" x2="270" y2="259" stroke="#111"/>
+<text x="48" y="275" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">castVote(user, election, candidate)</text>
+<text x="48" y="290" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">openBallot(user, election)</text>
+<rect x="330" y="220" width="250" height="100" stroke="#111" fill="#fff"/>
+<text x="455" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="455" y="252" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ElectionAdminService</text>
+<line x1="330" y1="259" x2="580" y2="259" stroke="#111"/>
+<text x="338" y="275" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">createElection(), updateDraft()</text>
+<text x="338" y="290" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">addCandidate(), removeCandidate()</text>
+<text x="338" y="305" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">activate(), close()</text>
+<text x="338" y="320" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">grantEligibility(), revokeEligibility()</text>
+<rect x="620" y="220" width="220" height="65" stroke="#111" fill="#fff"/>
+<text x="730" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="730" y="252" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ReceiptVerificationService</text>
+<line x1="620" y1="259" x2="840" y2="259" stroke="#111"/>
+<text x="628" y="275" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">verify(code): ReceiptStatus</text>
+<rect x="880" y="220" width="230" height="95" stroke="#111" fill="#fff"/>
+<text x="995" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="995" y="252" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ElectionQueryService</text>
+<line x1="880" y1="259" x2="1110" y2="259" stroke="#111"/>
+<text x="888" y="275" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">voterDashboard(), adminDetail()</text>
+<text x="888" y="290" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">resultsFor(), listOverviews()</text>
+<text x="888" y="305" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">hasVoted()</text>
+<rect x="1150" y="220" width="210" height="80" stroke="#111" fill="#fff"/>
+<text x="1255" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="1255" y="252" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">UserAdminService</text>
+<line x1="1150" y1="259" x2="1360" y2="259" stroke="#111"/>
+<text x="1158" y="275" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">createVoter()</text>
+<text x="1158" y="290" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">setVoterEnabled()</text>
+<rect x="40" y="380" width="230" height="100" stroke="#111" fill="#fff"/>
+<text x="155" y="397" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«service»</text>
+<text x="155" y="412" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">AuditService</text>
+<line x1="40" y1="419" x2="270" y2="419" stroke="#111"/>
+<text x="48" y="435" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">recordAdminEvent()</text>
+<text x="48" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">recordRejection()  {REQUIRES_NEW}</text>
+<text x="48" y="465" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">recentEvents()</text>
+<rect x="330" y="380" width="230" height="100" stroke="#111" fill="#fff"/>
+<text x="445" y="397" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«component»</text>
+<text x="445" y="412" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">VoteTransaction</text>
+<line x1="330" y1="419" x2="560" y2="419" stroke="#111"/>
+<text x="338" y="435" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">castVote()  {transactional}</text>
+<text x="338" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">loadBallot()  {read only}</text>
+<rect x="40" y="540" width="200" height="60" stroke="#111" fill="#fff"/>
+<text x="140" y="557" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«component»</text>
+<text x="140" y="572" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ReceiptGenerator</text>
+<line x1="40" y1="579" x2="240" y2="579" stroke="#111"/>
+<text x="48" y="595" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">newCode(): String</text>
+<rect x="640" y="415" width="200" height="80" stroke="#111" fill="#fff"/>
+<text x="740" y="432" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ReceiptCodec</text>
+<line x1="640" y1="439" x2="840" y2="439" stroke="#111"/>
+<text x="648" y="455" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">encode(), format()</text>
+<text x="648" y="470" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">normalize(), hash()</text>
+<rect x="640" y="515" width="200" height="80" stroke="#111" fill="#fff"/>
+<text x="740" y="532" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">VotingPolicy</text>
+<line x1="640" y1="539" x2="840" y2="539" stroke="#111"/>
+<text x="648" y="555" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">evaluate(VoteContext)</text>
+<text x="648" y="570" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">evaluateAccess(VoteContext)</text>
+<rect x="880" y="400" width="230" height="100" stroke="#111" fill="#fff"/>
+<text x="995" y="417" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ElectionLifecyclePolicy</text>
+<line x1="880" y1="424" x2="1110" y2="424" stroke="#111"/>
+<text x="888" y="440" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">phaseOf(), isWithinVotingWindow()</text>
+<text x="888" y="455" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">activationProblems()</text>
+<text x="888" y="470" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">resultsVisible(), canClose()</text>
+<rect x="1130" y="420" width="220" height="70" stroke="#111" fill="#fff"/>
+<text x="1240" y="437" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">TallyCalculator</text>
+<line x1="1130" y1="444" x2="1350" y2="444" stroke="#111"/>
+<text x="1138" y="460" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">tally(candidates, ballots)</text>
+<text x="1138" y="475" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">percent()</text>
+<rect x="300" y="660" width="800" height="80" stroke="#111" fill="#fff"/>
+<text x="700" y="677" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-style="italic">«Spring Data JPA»</text>
+<text x="700" y="692" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Repositories</text>
+<line x1="300" y1="699" x2="1100" y2="699" stroke="#111"/>
+<text x="308" y="715" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">Election, UserAccount, Candidate, ElectionEligibility, Participation, Ballot and AuditEvent repositories</text>
+<text x="308" y="730" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">ElectionRepository.findByIdForUpdate() and UserAccountRepository.findByUsernameForUpdate() take row locks</text>
+<path d="M1130,660 h226 l14,14 v56 h-240 Z" fill="#fff8dc" stroke="#111"/>
+<text x="1138" y="678" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">Every service uses repositories.</text>
+<text x="1138" y="693" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">Only two of those arrows are drawn</text>
+<text x="1138" y="708" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">to keep the diagram readable.</text>
+<line x1="155" y1="135" x2="155" y2="220" stroke="#111" marker-end="url(#open)"/>
+<line x1="436.5" y1="135" x2="448.2" y2="220" stroke="#111" marker-end="url(#open)"/>
+<line x1="689.0" y1="105" x2="721.0" y2="220" stroke="#111" marker-end="url(#open)"/>
+<line x1="943.5" y1="135" x2="976.5" y2="220" stroke="#111" marker-end="url(#open)"/>
+<line x1="1015.9" y1="135" x2="1178.5" y2="220" stroke="#111" marker-end="url(#open)"/>
+<line x1="223.2" y1="300" x2="359.7" y2="380" stroke="#111" marker-end="url(#open)"/>
+<text x="291.5" y="335" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">1. vote</text>
+<line x1="155" y1="300" x2="155" y2="380" stroke="#111" marker-end="url(#open)"/>
+<text x="155" y="335" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">2. after a</text>
+<text x="155" y="350" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">rejection</text>
+<line x1="361.3" y1="320" x2="248.8" y2="380" stroke="#111" marker-end="url(#open)"/>
+<line x1="560" y1="478.7" x2="645.6" y2="515" stroke="#111" marker-end="url(#open)"/>
+<line x1="560" y1="439.7" x2="640" y2="446.5" stroke="#111" marker-end="url(#open)"/>
+<line x1="336.1" y1="480" x2="205.4" y2="540" stroke="#111" marker-end="url(#open)"/>
+<line x1="492.2" y1="480" x2="662.2" y2="660" stroke="#111" marker-end="url(#open)"/>
+<line x1="255.9" y1="480" x2="619.3" y2="660" stroke="#111" marker-end="url(#open)"/>
+<line x1="837.1" y1="515" x2="880" y2="497.4" stroke="#111" marker-end="url(#open)"/>
+<line x1="580" y1="311.7" x2="880" y2="411.7" stroke="#111" marker-end="url(#open)"/>
+<line x1="731.6" y1="285" x2="738.0" y2="415" stroke="#111" marker-end="url(#open)"/>
+<line x1="995" y1="315" x2="995" y2="400" stroke="#111" marker-end="url(#open)"/>
+<line x1="1057.1" y1="315" x2="1194.3" y2="420" stroke="#111" marker-end="url(#open)"/>
+</svg>

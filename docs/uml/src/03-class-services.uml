@@ -1,0 +1,40 @@
+# Services, pure policy classes and the controllers that call them. Not every dependency is drawn.
+diagram|03-class-services|Class diagram: controllers, services and policy rules|1400|770
+frame|f_policy|620|370|750|240|policy package (pure rules: no Spring, no database)
+class|VoterController|40|40|230|95|«controller»;VoterController|dashboard(), ballot(), review();vote(), confirmation()
+class|AdminElectionController|300|40|260|95|«controller»;AdminElectionController|createElection(), updateElection();addCandidate(), activate(), close();grantEligibility(), revokeEligibility()
+class|ReceiptController|580|40|200|65|«controller»;ReceiptController|verify(code)
+class|OtherControllers|810|40|230|95|«controller»;Other controllers|ResultsController;AdminVoterController;AdminAuditController, HomeController
+class|VotingService|40|220|230|80|«service»;VotingService|castVote(user, election, candidate);openBallot(user, election)
+class|ElectionAdminService|330|220|250|100|«service»;ElectionAdminService|createElection(), updateDraft();addCandidate(), removeCandidate();activate(), close();grantEligibility(), revokeEligibility()
+class|ReceiptVerificationService|620|220|220|65|«service»;ReceiptVerificationService|verify(code): ReceiptStatus
+class|ElectionQueryService|880|220|230|95|«service»;ElectionQueryService|voterDashboard(), adminDetail();resultsFor(), listOverviews();hasVoted()
+class|UserAdminService|1150|220|210|80|«service»;UserAdminService|createVoter();setVoterEnabled()
+class|AuditService|40|380|230|100|«service»;AuditService|recordAdminEvent();recordRejection()  {REQUIRES_NEW};recentEvents()
+class|VoteTransaction|330|380|230|100|«component»;VoteTransaction|castVote()  {transactional};loadBallot()  {read only}
+class|ReceiptGenerator|40|540|200|60|«component»;ReceiptGenerator|newCode(): String
+class|ReceiptCodec|640|415|200|80|ReceiptCodec|encode(), format();normalize(), hash()
+class|VotingPolicy|640|515|200|80|VotingPolicy|evaluate(VoteContext);evaluateAccess(VoteContext)
+class|ElectionLifecyclePolicy|880|400|230|100|ElectionLifecyclePolicy|phaseOf(), isWithinVotingWindow();activationProblems();resultsVisible(), canClose()
+class|TallyCalculator|1130|420|220|70|TallyCalculator|tally(candidates, ballots);percent()
+class|Repositories|300|660|800|80|«Spring Data JPA»;Repositories|Election, UserAccount, Candidate, ElectionEligibility, Participation, Ballot and AuditEvent repositories;ElectionRepository.findByIdForUpdate() and UserAccountRepository.findByUsernameForUpdate() take row locks
+note|n_all|1130|660|240|70|Every service uses repositories.;Only two of those arrows are drawn;to keep the diagram readable.
+
+edge|VoterController|VotingService||arrow
+edge|AdminElectionController|ElectionAdminService||arrow
+edge|ReceiptController|ReceiptVerificationService||arrow
+edge|OtherControllers|ElectionQueryService||arrow
+edge|OtherControllers|UserAdminService||arrow
+edge|VotingService|VoteTransaction|1. vote|arrow
+edge|VotingService|AuditService|2. after a;rejection|arrow
+edge|ElectionAdminService|AuditService||arrow
+edge|VoteTransaction|VotingPolicy||arrow
+edge|VoteTransaction|ReceiptCodec||arrow
+edge|VoteTransaction|ReceiptGenerator||arrow
+edge|VoteTransaction|Repositories||arrow
+edge|AuditService|Repositories||arrow
+edge|VotingPolicy|ElectionLifecyclePolicy||arrow
+edge|ElectionAdminService|ElectionLifecyclePolicy||arrow
+edge|ReceiptVerificationService|ReceiptCodec||arrow
+edge|ElectionQueryService|ElectionLifecyclePolicy||arrow
+edge|ElectionQueryService|TallyCalculator||arrow

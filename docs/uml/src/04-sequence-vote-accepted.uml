@@ -1,0 +1,26 @@
+# Accepted vote. Order of calls and locks as implemented in VoteTransaction.castVote.
+diagram|04-sequence-vote-accepted|Sequence diagram: a vote is accepted|1300|800
+lifeline|browser|30|30|150|750|Voter (browser)
+lifeline|controller|210|30|150|750|VoterController
+lifeline|service|390|30|150|750|VotingService
+lifeline|tx|570|30|150|750|VoteTransaction
+lifeline|policy|750|30|150|750|VotingPolicy
+lifeline|db|930|30|150|750|H2 database
+lifeline|generator|1110|30|150|750|ReceiptGenerator
+
+msg|browser|controller|120|POST /voter/elections/{id}/vote;(candidateId, CSRF token)|call
+msg|controller|service|160|castVote(principal, election, candidate)|call
+msg|service|tx|200|castVote(...)  [transaction begins]|call
+msg|tx|db|240|SELECT election FOR UPDATE  (lock 1)|call
+msg|tx|db|280|SELECT voter account FOR UPDATE  (lock 2)|call
+msg|tx|tx|305|read the clock (after the locks)|self
+msg|tx|db|370|eligible? already voted? candidate of this election?|call
+msg|tx|policy|410|evaluate(VoteContext)|call
+msg|policy|tx|450|no rejection|return
+msg|tx|db|490|INSERT participation  (flush)|call
+msg|tx|generator|530|newCode()|call
+msg|generator|tx|570|code (160 random bits)|return
+msg|tx|db|610|INSERT ballot (candidate, hash of code)  (flush)|call
+msg|tx|service|650|VoteReceipt  [commit: both rows or none]|return
+msg|service|controller|690|VoteReceipt|return
+msg|controller|browser|745|302 redirect to /confirmation;(code as one-time flash attribute)|return

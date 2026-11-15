@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>VotingPolicy.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package edu.comp5100.election.policy;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Optional;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Pure decision rules for accepting a vote (FR-07, FR-09, FR-10, FR-11, FR-16, FR-17).</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The order of the checks is fixed and documented in docs/ARCHITECTURE.md.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public final class VotingPolicy {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    private VotingPolicy() {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Checks whether the voter may open the ballot of this election at all: account, eligibility,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * election phase and the one-vote rule. Returns the first rule that fails, or empty.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static Optional&#60;VoteRejectionReason&#62; evaluateAccess(VoteContext context) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_19'/>
+19
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_19'>1</a>
+<span>
+
+1. evaluateAccess : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!context.voterMayVote()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_20'/>
+20
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_20'>1</a>
+<span>
+
+1. evaluateAccess : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Optional.of(VoteRejectionReason.ACCOUNT_NOT_PERMITTED);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_22'/>
+22
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_22'>1</a>
+<span>
+
+1. evaluateAccess : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!context.eligible()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_23'/>
+23
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_23'>1</a>
+<span>
+
+1. evaluateAccess : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Optional.of(VoteRejectionReason.NOT_ELIGIBLE);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ElectionPhase phase = ElectionLifecyclePolicy.phaseOf(</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                context.status(), context.startsAt(), context.endsAt(), context.now());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        Optional&#60;VoteRejectionReason&#62; phaseProblem = switch (phase) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case DRAFT -&#62; Optional.of(VoteRejectionReason.ELECTION_NOT_OPEN);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case SCHEDULED -&#62; Optional.of(VoteRejectionReason.VOTING_NOT_STARTED);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case ENDED -&#62; Optional.of(VoteRejectionReason.VOTING_ENDED);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case CLOSED -&#62; Optional.of(VoteRejectionReason.ELECTION_CLOSED);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case VOTING -&#62; Optional.empty();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        };</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_34'/>
+34
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_34'>1</a>
+<span>
+
+1. evaluateAccess : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (phaseProblem.isPresent()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            return phaseProblem;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_37'/>
+37
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_37'>1</a>
+<span>
+
+1. evaluateAccess : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (context.alreadyVoted()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_38'/>
+38
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_38'>1</a>
+<span>
+
+1. evaluateAccess : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Optional.of(VoteRejectionReason.ALREADY_VOTED);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        return Optional.empty();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Full decision for a submitted vote: the access rules, then the candidate rules. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static Optional&#60;VoteRejectionReason&#62; evaluate(VoteContext context) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        Optional&#60;VoteRejectionReason&#62; accessProblem = evaluateAccess(context);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_46'/>
+46
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_46'>1</a>
+<span>
+
+1. evaluate : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (accessProblem.isPresent()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_47'/>
+47
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_47'>1</a>
+<span>
+
+1. evaluate : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return accessProblem;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_49'/>
+49
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_49'>1</a>
+<span>
+
+1. evaluate : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!context.candidateSelected()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_50'/>
+50
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_50'>1</a>
+<span>
+
+1. evaluate : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Optional.of(VoteRejectionReason.NO_CANDIDATE_SELECTED);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_52'/>
+52
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_52'>1</a>
+<span>
+
+1. evaluate : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!context.candidateOnBallot()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_53'/>
+53
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_53'>1</a>
+<span>
+
+1. evaluate : replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Optional.of(VoteRejectionReason.INVALID_CANDIDATE);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        return Optional.empty();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@74b7497b_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_19'>19</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_19'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:accountThatMayNotVoteIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_20'>20</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_20'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:accountThatMayNotVoteIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_22'>22</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_22'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ineligibleVoterIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_23'>23</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_23'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ineligibleVoterIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_34'>34</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_34'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#2]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_37'>37</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_37'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:duplicateVoteIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_38'>38</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_38'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluateAccess<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:duplicateVoteIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluateAccess &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_46'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ineligibleVoterIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_47'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ineligibleVoterIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_49'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:missingSelectionIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_50'>50</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_50'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:missingSelectionIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_52'>52</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_52'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:candidateOfAnotherElectionIsRefused()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@74b7497b_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@74b7497b_53'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>evaluate<br/><b>Killed by : </b>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:candidateOfAnotherElectionIsRefused()]</span></span> replaced return value with Optional.empty for edu/comp5100/election/policy/VotingPolicy::evaluate &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+
+<li class='mutator'>EMPTY_RETURNS</li>
+
+<li class='mutator'>FALSE_RETURNS</li>
+
+<li class='mutator'>INCREMENTS</li>
+
+<li class='mutator'>INVERT_NEGS</li>
+
+<li class='mutator'>MATH</li>
+
+<li class='mutator'>NULL_RETURNS</li>
+
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+
+<li class='mutator'>TRUE_RETURNS</li>
+
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:duplicateVoteIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ruleOrder()] (0 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:duplicateVoteWritesNothing()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsRefusedAfterVoting()] (11 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ineligibleVoterIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#2] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#5] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#6] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#3] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#4] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:accessCheckIgnoresCandidateFacts()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:windowEdgesThatAccept()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:validVoteIsAccepted()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:missingSelectionIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:candidateOfAnotherElectionIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ineligibleVoterIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#1] (3 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:missingCandidateIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsLoadedForAnAllowedVoter()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:candidateOfAnotherElectionIsRefused()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:closedElectionIsRefused()] (8 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:clockDecidesTheWindow()] (9 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotStoresOnlyTheReceiptHash()] (10 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:acceptedVoteStoresParticipationThenBallot()] (13 ms)</li><li>edu.comp5100.election.adversarial.unit.BoundaryAndGuardTest.[engine:junit-jupiter]/[class:edu.comp5100.election.adversarial.unit.BoundaryAndGuardTest]/[method:oneNanosecondWindow()] (182 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:constraintViolationIsTreatedAsDuplicate()] (536 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:accountThatMayNotVoteIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:unknownAccountIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:disabledAccountIsRefused()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:administratorCannotVote()] (6 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.2 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

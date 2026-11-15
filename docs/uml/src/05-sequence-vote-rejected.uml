@@ -1,0 +1,25 @@
+# Rejected duplicate vote. The audit record is written after the voting transaction has rolled back.
+diagram|05-sequence-vote-rejected|Sequence diagram: a duplicate vote is rejected|1300|720
+lifeline|browser|30|30|150|600|Voter (browser)
+lifeline|controller|210|30|150|600|VoterController
+lifeline|service|390|30|150|600|VotingService
+lifeline|tx|570|30|150|600|VoteTransaction
+lifeline|policy|750|30|150|600|VotingPolicy
+lifeline|db|930|30|150|600|H2 database
+lifeline|audit|1110|30|150|600|AuditService
+note|n_fail|390|650|520|50|If the audit insert fails, the failure is logged and the rejection is still returned.;A broken audit log can never turn a rejected vote into an accepted one.
+
+msg|browser|controller|120|POST /voter/elections/{id}/vote;(candidateId, CSRF token)|call
+msg|controller|service|160|castVote(principal, election, candidate)|call
+msg|service|tx|200|castVote(...)  [transaction 1 begins]|call
+msg|tx|db|240|SELECT election FOR UPDATE  (lock 1)|call
+msg|tx|db|280|SELECT voter account FOR UPDATE  (lock 2)|call
+msg|tx|db|320|participation exists? yes|call
+msg|tx|policy|360|evaluate(VoteContext)|call
+msg|policy|tx|400|ALREADY_VOTED|return
+msg|tx|service|440|VoteRejectedException  [transaction 1 rolls back]|return
+msg|service|audit|480|recordRejection(account, election, reason)  [transaction 2: REQUIRES_NEW]|call
+msg|audit|db|520|INSERT audit_event  [commit]|call
+msg|audit|service|555|done|return
+msg|service|controller|590|VoteRejectedException|return
+msg|controller|browser|630|409 page: You have already voted;in this election.|return

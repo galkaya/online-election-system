@@ -1,0 +1,18 @@
+# Deployment of the local demo.
+diagram|06-deployment|Deployment diagram: local demo|1120|560
+node|laptop|30|40|1060|490|«device»  Demo laptop
+node|n_browser|70|110|270|160|«execution environment»  Web browser
+box|pages|90|170|230|70|HTML pages and app.css;(no external resources)
+node|n_jvm|420|110|380|390|«execution environment»  Java 21 JVM
+box|jar|440|160|340|50|«artifact» online-election-system-1.0.0.jar
+box|tomcat|440|235|340|60|Embedded Tomcat, port 8080;Spring MVC, Spring Security, Thymeleaf
+box|services|440|320|340|50|Services and policy rules
+box|h2|440|395|340|70|Embedded H2 engine, HikariCP pool;Flyway migration at start-up
+node|n_disk|860|330|200|170|«device»  Local disk
+box|dbfile|880|400|160|70|data/demo/;election-demo.mv.db
+note|n_tests|860|110|200|150|Automated tests start;the same application with;an in-memory H2 database;on a random port.;System tests add Selenium;and headless Chrome.
+
+edge|pages|tomcat|HTTP on localhost;session cookie, CSRF token|arrow
+edge|tomcat|services||arrow
+edge|services|h2|JDBC|arrow
+edge|h2|dbfile|file access|arrow

@@ -27,12 +27,13 @@ public class HttpTestClient {
 
     private final String baseUrl;
     private final HttpClient client;
+    private final CookieManager cookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
     private String csrfToken;
 
     public HttpTestClient(int port) {
         this.baseUrl = "http://localhost:" + port;
         this.client = HttpClient.newBuilder()
-                .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
+                .cookieHandler(cookies)
                 .followRedirects(HttpClient.Redirect.NEVER)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
@@ -78,6 +79,19 @@ public class HttpTestClient {
             response = follow(response);
         }
         return response;
+    }
+
+    /** The CSRF token of the last page that contained one, or null. */
+    public String csrfToken() {
+        return csrfToken;
+    }
+
+    /** The current value of the session cookie, or null when there is none. */
+    public String sessionId() {
+        return cookies.getCookieStore().getCookies().stream()
+                .filter(cookie -> "JSESSIONID".equals(cookie.getName()))
+                .map(java.net.HttpCookie::getValue)
+                .findFirst().orElse(null);
     }
 
     private HttpResponse<String> send(HttpRequest.Builder request) {

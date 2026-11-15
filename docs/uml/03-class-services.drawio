@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net" agent="UmlGenerator" version="24.0.0">
+  <diagram id="03-class-services" name="Class diagram: controllers, services and policy rules">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="770" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="f_policy" value="policy package (pure rules: no Spring, no database)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="370" width="750" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="VoterController" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«controller»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;VoterController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;dashboard(), ballot(), review()&lt;br/&gt;vote(), confirmation()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="230" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="AdminElectionController" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«controller»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;AdminElectionController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;createElection(), updateElection()&lt;br/&gt;addCandidate(), activate(), close()&lt;br/&gt;grantEligibility(), revokeEligibility()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="300" y="40" width="260" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="ReceiptController" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«controller»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ReceiptController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;verify(code)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="580" y="40" width="200" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="OtherControllers" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«controller»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;Other controllers&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;ResultsController&lt;br/&gt;AdminVoterController&lt;br/&gt;AdminAuditController, HomeController&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="810" y="40" width="230" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="VotingService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;VotingService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;castVote(user, election, candidate)&lt;br/&gt;openBallot(user, election)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ElectionAdminService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ElectionAdminService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;createElection(), updateDraft()&lt;br/&gt;addCandidate(), removeCandidate()&lt;br/&gt;activate(), close()&lt;br/&gt;grantEligibility(), revokeEligibility()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="330" y="220" width="250" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="ReceiptVerificationService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ReceiptVerificationService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;verify(code): ReceiptStatus&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="620" y="220" width="220" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="ElectionQueryService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ElectionQueryService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;voterDashboard(), adminDetail()&lt;br/&gt;resultsFor(), listOverviews()&lt;br/&gt;hasVoted()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="880" y="220" width="230" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="UserAdminService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;UserAdminService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;createVoter()&lt;br/&gt;setVoterEnabled()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="220" width="210" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="AuditService" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«service»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;AuditService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;recordAdminEvent()&lt;br/&gt;recordRejection()  {REQUIRES_NEW}&lt;br/&gt;recentEvents()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="230" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="VoteTransaction" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«component»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;VoteTransaction&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;castVote()  {transactional}&lt;br/&gt;loadBallot()  {read only}&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="330" y="380" width="230" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="ReceiptGenerator" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«component»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ReceiptGenerator&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;newCode(): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="540" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ReceiptCodec" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;b&gt;ReceiptCodec&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;encode(), format()&lt;br/&gt;normalize(), hash()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="640" y="415" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="VotingPolicy" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;b&gt;VotingPolicy&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;evaluate(VoteContext)&lt;br/&gt;evaluateAccess(VoteContext)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="640" y="515" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ElectionLifecyclePolicy" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;b&gt;ElectionLifecyclePolicy&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;phaseOf(), isWithinVotingWindow()&lt;br/&gt;activationProblems()&lt;br/&gt;resultsVisible(), canClose()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="880" y="400" width="230" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="TallyCalculator" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;b&gt;TallyCalculator&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;tally(candidates, ballots)&lt;br/&gt;percent()&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="420" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="Repositories" value="&lt;p style=&quot;margin:4px 0 0 0;text-align:center&quot;&gt;&lt;i&gt;«Spring Data JPA»&lt;/i&gt;&lt;br/&gt;&lt;b&gt;Repositories&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 6px&quot;&gt;Election, UserAccount, Candidate, ElectionEligibility, Participation, Ballot and AuditEvent repositories&lt;br/&gt;ElectionRepository.findByIdForUpdate() and UserAccountRepository.findByUsernameForUpdate() take row locks&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;whiteSpace=wrap;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="300" y="660" width="800" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_all" value="Every service uses repositories.&lt;br/&gt;Only two of those arrows are drawn&lt;br/&gt;to keep the diagram readable." style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=6;fillColor=#fff8dc;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="660" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VoterController" target="VotingService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="AdminElectionController" target="ElectionAdminService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ReceiptController" target="ReceiptVerificationService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="OtherControllers" target="ElectionQueryService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="OtherControllers" target="UserAdminService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="1. vote" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VotingService" target="VoteTransaction">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="2. after a&lt;br/&gt;rejection" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VotingService" target="AuditService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ElectionAdminService" target="AuditService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VoteTransaction" target="VotingPolicy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VoteTransaction" target="ReceiptCodec">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VoteTransaction" target="ReceiptGenerator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VoteTransaction" target="Repositories">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="AuditService" target="Repositories">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="VotingPolicy" target="ElectionLifecyclePolicy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ElectionAdminService" target="ElectionLifecyclePolicy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ReceiptVerificationService" target="ReceiptCodec">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ElectionQueryService" target="ElectionLifecyclePolicy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="ElectionQueryService" target="TallyCalculator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

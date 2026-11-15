@@ -108,14 +108,15 @@ public class DemoDataSeeder implements ApplicationRunner {
                         + "election has already ended.",
                 now.minus(Duration.ofDays(3)), now.minus(Duration.ofDays(1)), now.minus(Duration.ofDays(4))));
         Candidate yes = candidate(referendum, "Yes, extend the hours", "Keep the library open until midnight.");
-        Candidate no = candidate(referendum, "No, keep the current hours", "Keep closing the library at 9 PM.");
+        candidate(referendum, "No, keep the current hours", "Keep closing the library at 9 PM.");
         for (UserAccount eligibleVoter : List.of(voter1, voter2, voter3)) {
             eligibilityRepository.save(new ElectionEligibility(referendum.getId(), eligibleVoter.getId()));
         }
         referendum.markOpen();
-        // Two fictional votes cast before the deadline; voter3 did not vote and can no longer do so.
+        // Two fictional votes cast before the deadline, both for "Yes", so the result page shows a winner
+        // and a candidate with zero votes. voter3 did not vote and can no longer do so.
         seedVote(referendum, voter1, yes);
-        seedVote(referendum, voter2, no);
+        seedVote(referendum, voter2, yes);
 
         // 3. Upcoming fixture: activated, but the voting window has not started.
         Election festival = electionRepository.save(new Election("Spring Festival Theme Vote",

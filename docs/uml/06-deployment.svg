@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-label="Deployment diagram: local demo">
+<title>Deployment diagram: local demo</title>
+<defs>
+<marker id="open" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9" fill="none" stroke="#111" stroke-width="1.2"/></marker>
+<marker id="solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9 Z" fill="#111"/></marker>
+<marker id="hollow" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 Z" fill="#fff" stroke="#111"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<path d="M30,40 l12,-10 h1060 v490 l-12,10" fill="#dfe6f7" stroke="#111"/>
+<rect x="30" y="40" width="1060" height="490" stroke="#111" fill="#eef2ff"/>
+<text x="40" y="58" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#111">«device»  Demo laptop</text>
+<path d="M70,110 l12,-10 h270 v160 l-12,10" fill="#dfe6f7" stroke="#111"/>
+<rect x="70" y="110" width="270" height="160" stroke="#111" fill="#eef2ff"/>
+<text x="80" y="128" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#111">«execution environment»  Web browser</text>
+<path d="M420,110 l12,-10 h380 v390 l-12,10" fill="#dfe6f7" stroke="#111"/>
+<rect x="420" y="110" width="380" height="390" stroke="#111" fill="#eef2ff"/>
+<text x="430" y="128" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#111">«execution environment»  Java 21 JVM</text>
+<path d="M860,330 l12,-10 h200 v170 l-12,10" fill="#dfe6f7" stroke="#111"/>
+<rect x="860" y="330" width="200" height="170" stroke="#111" fill="#eef2ff"/>
+<text x="870" y="348" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" font-weight="bold" fill="#111">«device»  Local disk</text>
+<rect x="90" y="170" width="230" height="70" stroke="#111" fill="#f5f7fb"/>
+<text x="205" y="201.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">HTML pages and app.css</text>
+<text x="205" y="216.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">(no external resources)</text>
+<rect x="440" y="160" width="340" height="50" stroke="#111" fill="#f5f7fb"/>
+<text x="610" y="189" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">«artifact» online-election-system-1.0.0.jar</text>
+<rect x="440" y="235" width="340" height="60" stroke="#111" fill="#f5f7fb"/>
+<text x="610" y="261.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">Embedded Tomcat, port 8080</text>
+<text x="610" y="276.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">Spring MVC, Spring Security, Thymeleaf</text>
+<rect x="440" y="320" width="340" height="50" stroke="#111" fill="#f5f7fb"/>
+<text x="610" y="349" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">Services and policy rules</text>
+<rect x="440" y="395" width="340" height="70" stroke="#111" fill="#f5f7fb"/>
+<text x="610" y="426.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">Embedded H2 engine, HikariCP pool</text>
+<text x="610" y="441.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">Flyway migration at start-up</text>
+<rect x="880" y="400" width="160" height="70" stroke="#111" fill="#f5f7fb"/>
+<text x="960" y="431.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">data/demo/</text>
+<text x="960" y="446.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111">election-demo.mv.db</text>
+<path d="M860,110 h186 l14,14 v136 h-200 Z" fill="#fff8dc" stroke="#111"/>
+<text x="868" y="128" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">Automated tests start</text>
+<text x="868" y="143" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">the same application with</text>
+<text x="868" y="158" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">an in-memory H2 database</text>
+<text x="868" y="173" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">on a random port.</text>
+<text x="868" y="188" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">System tests add Selenium</text>
+<text x="868" y="203" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#111">and headless Chrome.</text>
+<line x1="320" y1="222.0" x2="440" y2="239.8" stroke="#111" marker-end="url(#open)"/>
+<text x="380" y="225.9" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">HTTP on localhost</text>
+<text x="380" y="240.9" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">session cookie, CSRF token</text>
+<line x1="610" y1="295" x2="610" y2="320" stroke="#111" marker-end="url(#open)"/>
+<line x1="610" y1="370" x2="610" y2="395" stroke="#111" marker-end="url(#open)"/>
+<text x="610" y="377.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">JDBC</text>
+<line x1="780" y1="432.4" x2="880" y2="433.9" stroke="#111" marker-end="url(#open)"/>
+<text x="830" y="428.1" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="4" paint-order="stroke">file access</text>
+</svg>

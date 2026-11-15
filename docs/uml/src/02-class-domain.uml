@@ -1,0 +1,25 @@
+# Domain model as implemented in edu.comp5100.election.domain. Entities refer to each other by id.
+diagram|02-class-domain|Class diagram: domain model|1220|700
+class|UserAccount|40|40|220|150|«entity»;UserAccount|id: Long;username: String;passwordHash: String;displayName: String;role: Role;enabled: boolean;createdAt: Instant
+class|Role|300|40|150|75|«enumeration»;Role|ADMIN;VOTER
+class|Election|500|40|260|185|«entity»;Election|id: Long;title: String;description: String;startsAt: Instant;endsAt: Instant;status: ElectionStatus;createdAt: Instant;phaseAt(now): ElectionPhase
+class|ElectionStatus|900|40|180|92|«enumeration»;ElectionStatus|DRAFT;OPEN;CLOSED
+class|ElectionPhase|900|165|180|122|«enumeration»;ElectionPhase|DRAFT;SCHEDULED;VOTING;ENDED;CLOSED
+class|ElectionEligibility|40|290|210|105|«entity»;ElectionEligibility|id: Long;electionId: Long;voterId: Long;active: boolean
+class|Participation|310|430|180|95|«entity»;Participation|id: Long;electionId: Long;voterId: Long
+class|Candidate|560|330|240|105|«entity»;Candidate|id: Long;electionId: Long;name: String;biography: String
+class|Ballot|560|540|240|105|«entity»;Ballot|id: UUID (random);electionId: Long;candidateId: Long;receiptHash: String
+class|AuditEvent|900|380|280|135|«entity»;AuditEvent|id: Long;occurredAt: Instant;eventType: AuditEventType;actor: String [0..1];electionId: Long [0..1];detail: String
+note|n_privacy|40|560|430|100|Ballot has no association to UserAccount or Participation;and no timestamp. It stores only the SHA-256 hash of the;confirmation code. Participation stores who voted, never;for whom. Unique (electionId, voterId) is the one-vote rule.
+note|n_audit|900|550|280|80|AuditEvent never stores a candidate,;a ballot id or a confirmation code.;Accepted votes create no AuditEvent.
+
+edge|UserAccount|Role|role|arrow
+edge|Election|ElectionStatus|status|arrow
+edge|Election|ElectionPhase|derived from;status and clock|dashed
+edge|Candidate|Election|* belongs to 1|arrow
+edge|ElectionEligibility|UserAccount|voter|arrow
+edge|ElectionEligibility|Election|election|arrow
+edge|Participation|UserAccount|voter|arrow
+edge|Participation|Election|election|arrow
+edge|Ballot|Candidate|candidate of the;same election|arrow
+edge|AuditEvent|Election|election;(optional)|dashed

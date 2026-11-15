@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>ElectionLifecyclePolicy.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package edu.comp5100.election.policy;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.comp5100.election.domain.ElectionStatus;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.time.Instant;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.ArrayList;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Collection;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Locale;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Pure rules for the election life cycle and the voting window. No Spring, no database.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The current time is always passed in, so the rules are testable with a fixed clock.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public final class ElectionLifecyclePolicy {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static final int MINIMUM_CANDIDATES = 2;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    private ElectionLifecyclePolicy() {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** A window is valid when both ends exist and the start is strictly before the end. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean isValidWindow(Instant startsAt, Instant endsAt) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_23'/>
+23
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_23'>4</a>
+<span>
+
+1. isValidWindow : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. isValidWindow : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::isValidWindow &rarr; KILLED<br/>
+
+3. isValidWindow : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+4. isValidWindow : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return startsAt != null &#38;&#38; endsAt != null &#38;&#38; startsAt.isBefore(endsAt);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * FR-07: {@code startsAt &#60;= now &#60; endsAt}. The start instant is accepted, the end instant is not.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean isWithinVotingWindow(Instant startsAt, Instant endsAt, Instant now) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_30'/>
+30
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_30'>3</a>
+<span>
+
+1. isWithinVotingWindow : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. isWithinVotingWindow : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+3. isWithinVotingWindow : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::isWithinVotingWindow &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return !now.isBefore(startsAt) &#38;&#38; now.isBefore(endsAt);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static ElectionPhase phaseOf(ElectionStatus status, Instant startsAt, Instant endsAt, Instant now) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_34'/>
+34
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_34'>1</a>
+<span>
+
+1. phaseOf : replaced return value with null for edu/comp5100/election/policy/ElectionLifecyclePolicy::phaseOf &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return switch (status) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case DRAFT -&#62; ElectionPhase.DRAFT;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            case CLOSED -&#62; ElectionPhase.CLOSED;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            case OPEN -&#62; {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_38'/>
+38
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_38'>1</a>
+<span>
+
+1. phaseOf : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                if (now.isBefore(startsAt)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    yield ElectionPhase.SCHEDULED;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_41'/>
+41
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_41'>1</a>
+<span>
+
+1. phaseOf : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                if (now.isBefore(endsAt)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    yield ElectionPhase.VOTING;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                yield ElectionPhase.ENDED;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        };</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Returns every reason that blocks activation; an empty list means the draft can be activated. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static List&#60;ActivationProblem&#62; activationProblems(ElectionStatus status, Instant startsAt, Instant endsAt,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            Collection&#60;String&#62; candidateNames, Instant now) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        List&#60;ActivationProblem&#62; problems = new ArrayList&#60;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_53'/>
+53
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_53'>1</a>
+<span>
+
+1. activationProblems : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (status != ElectionStatus.DRAFT) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            problems.add(ActivationProblem.NOT_A_DRAFT);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_55'>1</a>
+<span>
+
+1. activationProblems : replaced return value with Collections.emptyList for edu/comp5100/election/policy/ElectionLifecyclePolicy::activationProblems &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return problems;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_57'/>
+57
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_57'>1</a>
+<span>
+
+1. activationProblems : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!isValidWindow(startsAt, endsAt)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            problems.add(ActivationProblem.INVALID_WINDOW);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_59'/>
+59
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_59'>1</a>
+<span>
+
+1. activationProblems : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (!now.isBefore(endsAt)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            problems.add(ActivationProblem.DEADLINE_PASSED);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_62'>2</a>
+<span>
+
+1. activationProblems : changed conditional boundary &rarr; KILLED<br/>
+
+2. activationProblems : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (countDistinctValidNames(candidateNames) &#60; MINIMUM_CANDIDATES) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            problems.add(ActivationProblem.TOO_FEW_CANDIDATES);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_65'>1</a>
+<span>
+
+1. activationProblems : replaced return value with Collections.emptyList for edu/comp5100/election/policy/ElectionLifecyclePolicy::activationProblems &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return problems;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Counts candidate names that are not blank, ignoring case and surrounding spaces for duplicates. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static long countDistinctValidNames(Collection&#60;String&#62; candidateNames) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_70'>1</a>
+<span>
+
+1. countDistinctValidNames : replaced long return with 0 for edu/comp5100/election/policy/ElectionLifecyclePolicy::countDistinctValidNames &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return candidateNames.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_71'>3</a>
+<span>
+
+1. lambda$countDistinctValidNames$0 : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. lambda$countDistinctValidNames$0 : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::lambda$countDistinctValidNames$0 &rarr; KILLED<br/>
+
+3. lambda$countDistinctValidNames$0 : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                .filter(name -&#62; name != null &#38;&#38; !name.isBlank())</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_72'/>
+72
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_72'>1</a>
+<span>
+
+1. lambda$countDistinctValidNames$1 : replaced return value with &#34;&#34; for edu/comp5100/election/policy/ElectionLifecyclePolicy::lambda$countDistinctValidNames$1 &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                .map(name -&#62; name.trim().toLowerCase(Locale.ROOT))</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                .distinct()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                .count();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Title, description, window and candidates can change only while the election is a draft. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean canEditSetup(ElectionStatus status) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_79'/>
+79
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_79'>2</a>
+<span>
+
+1. canEditSetup : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. canEditSetup : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canEditSetup &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return status == ElectionStatus.DRAFT;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Only an activated election can be closed; a closed election is never reopened. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean canClose(ElectionStatus status) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_84'/>
+84
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_84'>2</a>
+<span>
+
+1. canClose : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. canClose : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canClose &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return status == ElectionStatus.OPEN;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** FR-14: results exist for viewers only after closing or after the deadline. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean resultsVisible(ElectionPhase phase) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_89'/>
+89
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_89'>3</a>
+<span>
+
+1. resultsVisible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. resultsVisible : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::resultsVisible &rarr; KILLED<br/>
+
+3. resultsVisible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return phase == ElectionPhase.ENDED || phase == ElectionPhase.CLOSED;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_90'/>
+90
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_90'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Eligibility can be granted or revoked until voting is over. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean canManageEligibility(ElectionPhase phase) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_94'/>
+94
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_94'>4</a>
+<span>
+
+1. canManageEligibility : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. canManageEligibility : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+3. canManageEligibility : replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canManageEligibility &rarr; KILLED<br/>
+
+4. canManageEligibility : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return phase == ElectionPhase.DRAFT || phase == ElectionPhase.SCHEDULED || phase == ElectionPhase.VOTING;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@799971ac_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_23'>23</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_23'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isValidWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:windowValidity()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isValidWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:windowValidity()]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::isValidWindow &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isValidWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:windowValidity()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>isValidWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:windowValidity()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_30'>30</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_30'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isWithinVotingWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#4]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isWithinVotingWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#4]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isWithinVotingWindow<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#6]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::isWithinVotingWindow &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_34'>34</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_34'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>phaseOf<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#4]</span></span> replaced return value with null for edu/comp5100/election/policy/ElectionLifecyclePolicy::phaseOf &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_38'>38</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_38'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>phaseOf<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#4]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_41'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>phaseOf<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#5]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_53'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:onlyDraftsCanBeActivated(edu.comp5100.election.domain.ElectionStatus)]/[test-template-invocation:#2]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:onlyDraftsCanBeActivated(edu.comp5100.election.domain.ElectionStatus)]/[test-template-invocation:#2]</span></span> replaced return value with Collections.emptyList for edu/comp5100/election/policy/ElectionLifecyclePolicy::activationProblems &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_57'>57</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_57'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationRefusedForInvalidWindow()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_59'>59</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_59'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationRefusedAfterDeadline()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()]</span></span> changed conditional boundary &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:allActivationProblemsAreReported()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>activationProblems<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationRefusedAfterDeadline()]</span></span> replaced return value with Collections.emptyList for edu/comp5100/election/policy/ElectionLifecyclePolicy::activationProblems &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>countDistinctValidNames<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()]</span></span> replaced long return with 0 for edu/comp5100/election/policy/ElectionLifecyclePolicy::countDistinctValidNames &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$countDistinctValidNames$0<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>lambda$countDistinctValidNames$0<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationNeedsTwoDistinctCandidates()]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::lambda$countDistinctValidNames$0 &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>lambda$countDistinctValidNames$0<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$countDistinctValidNames$1<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()]</span></span> replaced return value with &#34;&#34; for edu/comp5100/election/policy/ElectionLifecyclePolicy::lambda$countDistinctValidNames$1 &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_79'>79</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_79'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>canEditSetup<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#1]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>canEditSetup<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#2]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canEditSetup &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_84'>84</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_84'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>canClose<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#2]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>canClose<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#1]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canClose &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_89'>89</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_89'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resultsVisible<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#2]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resultsVisible<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#2]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::resultsVisible &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resultsVisible<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#5]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@799971ac_94'>94</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@799971ac_94'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>canManageEligibility<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#3]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>canManageEligibility<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#5]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>canManageEligibility<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#5]</span></span> replaced boolean return with true for edu/comp5100/election/policy/ElectionLifecyclePolicy::canManageEligibility &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>canManageEligibility<br/><b>Killed by : </b>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#5]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+
+<li class='mutator'>EMPTY_RETURNS</li>
+
+<li class='mutator'>FALSE_RETURNS</li>
+
+<li class='mutator'>INCREMENTS</li>
+
+<li class='mutator'>INVERT_NEGS</li>
+
+<li class='mutator'>MATH</li>
+
+<li class='mutator'>NULL_RETURNS</li>
+
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+
+<li class='mutator'>TRUE_RETURNS</li>
+
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:windowValidity()] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:draftCanBeActivatedInsideItsWindow()] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationRefusedAfterDeadline()] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:validDraftHasNoActivationProblems()] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationRefusedForInvalidWindow()] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:allActivationProblemsAreReported()] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[method:activationNeedsTwoDistinctCandidates()] (19 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:onlyDraftsCanBeActivated(edu.comp5100.election.domain.ElectionStatus)]/[test-template-invocation:#2] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:onlyDraftsCanBeActivated(edu.comp5100.election.domain.ElectionStatus)]/[test-template-invocation:#1] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#2] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#1] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:editAndCloseRules(edu.comp5100.election.domain.ElectionStatus, boolean, boolean)]/[test-template-invocation:#3] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#4] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#7] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#8] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#9] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#2] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#3] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#5] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#6] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#10] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#11] (2 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:duplicateVoteIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#6] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#3] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#4] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:accessCheckIgnoresCandidateFacts()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:windowEdgesThatAccept()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#2] (1 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#5] (1 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:validVoteIsAccepted()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:candidateOfAnotherElectionIsRefused()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[test-template:phaseRejections(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.VoteRejectionReason)]/[test-template-invocation:#1] (2 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:ruleOrder()] (0 ms)</li><li>edu.comp5100.election.unit.VotingPolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VotingPolicyTest]/[method:missingSelectionIsRefused()] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseTable(edu.comp5100.election.domain.ElectionStatus, java.time.Instant, edu.comp5100.election.policy.ElectionPhase)]/[test-template-invocation:#1] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:candidateOfAnotherElectionIsRefused()] (4 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:missingCandidateIsRefused()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsLoadedForAnAllowedVoter()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:duplicateVoteWritesNothing()] (5 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:closedElectionIsRefused()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotStoresOnlyTheReceiptHash()] (6 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:ballotIsRefusedAfterVoting()] (12 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:acceptedVoteStoresParticipationThenBallot()] (10 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:clockDecidesTheWindow()] (10 ms)</li><li>edu.comp5100.election.unit.VoteTransactionTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.VoteTransactionTest]/[method:constraintViolationIsTreatedAsDuplicate()] (537 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#5] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#2] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#3] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#4] (1 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:phaseDependentRules(edu.comp5100.election.policy.ElectionPhase, boolean, boolean)]/[test-template-invocation:#1] (23 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#4] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#5] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#6] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#7] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#2] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#3] (0 ms)</li><li>edu.comp5100.election.unit.ElectionLifecyclePolicyTest.[engine:junit-jupiter]/[class:edu.comp5100.election.unit.ElectionLifecyclePolicyTest]/[test-template:votingWindowBoundaries(java.lang.String, java.time.Instant, boolean)]/[test-template-invocation:#1] (4 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.2 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

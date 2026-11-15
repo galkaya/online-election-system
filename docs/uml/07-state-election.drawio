@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="UmlGenerator" version="24.0.0">
+  <diagram id="07-state-election" name="State diagram: election life cycle">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1080" pageHeight="430" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="s0" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="78" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="DRAFT" value="DRAFT" style="rounded=1;whiteSpace=wrap;html=1;arcSize=30;fontStyle=1;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="160" y="60" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="OPEN" value="OPEN" style="rounded=1;whiteSpace=wrap;html=1;arcSize=30;fontStyle=1;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="CLOSED" value="CLOSED" style="rounded=1;whiteSpace=wrap;html=1;arcSize=30;fontStyle=1;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s9" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="78" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_draft" value="Title, schedule and candidates can change.&lt;br/&gt;Eligibility can change.&lt;br/&gt;Not visible to voters. No votes.&lt;br/&gt;Activation needs: at least 2 candidates,&lt;br/&gt;valid window, now &lt; endsAt." style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=6;fillColor=#fff8dc;" vertex="1" parent="1">
+          <mxGeometry x="90" y="200" width="290" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_open" value="Setup is locked. Phase by the server clock:&lt;br/&gt;now &lt; startsAt: &quot;Not started&quot;, no votes&lt;br/&gt;startsAt &lt;= now &lt; endsAt: &quot;Voting open&quot;&lt;br/&gt;now &gt;= endsAt: &quot;Voting ended&quot;, no votes,&lt;br/&gt;results are shown&lt;br/&gt;Eligibility can change until voting is over." style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=6;fillColor=#fff8dc;" vertex="1" parent="1">
+          <mxGeometry x="410" y="200" width="300" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="n_closed" value="Final: never reopened.&lt;br/&gt;No votes. Results are shown.&lt;br/&gt;Eligibility is frozen." style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=6;fillColor=#fff8dc;" vertex="1" parent="1">
+          <mxGeometry x="740" y="200" width="290" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="create" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="s0" target="DRAFT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="activate&lt;br/&gt;(administrator)" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="DRAFT" target="OPEN">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="close&lt;br/&gt;(administrator)" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="OPEN" target="CLOSED">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="endArrow=open;endSize=10;html=1;rounded=0;" edge="1" parent="1" source="CLOSED" target="s9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="endArrow=open;endSize=10;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="n_draft" target="DRAFT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="endArrow=open;endSize=10;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="n_open" target="OPEN">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="endArrow=open;endSize=10;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="n_closed" target="CLOSED">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
