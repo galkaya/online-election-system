@@ -1,7 +1,7 @@
 # Implementation status
 
 Resume point for the work: what is finished, what is not, and the commands that were really run.
-Last update: 2026-11-15, commit `82ccd66` plus the documents written after it.
+Last update: 2026-11-15, commit `243855e` plus the documents written after it.
 
 ## 1. Environment that was set up
 

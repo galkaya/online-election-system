@@ -1,6 +1,6 @@
 # Results of the experiment
 
-Measured on 2026-11-15 by `scripts/run-ai-experiment.ps1` at commit `b0abee9` with a clean
+Measured on 2026-11-15 by `scripts/run-ai-experiment.ps1` at commit `0651f65` with a clean
 working tree. The generated table is `docs/evidence/ai-experiment/summary.md`; the raw JaCoCo
 and PIT files of both runs are in the same folder.
 
@@ -8,7 +8,7 @@ and PIT files of both runs are in the same folder.
 
 | Item | Baseline run | Expanded run |
 |---|---|---|
-| Production code | commit `b0abee9` | the same commit |
+| Production code | commit `0651f65` | the same commit |
 | Tests | everything without the tag `adversarial` (`-Pbaseline`) | everything |
 | Coverage tool and settings | JaCoCo 0.8.16, Surefire and Failsafe merged | the same |
 | Mutation tool and settings | PIT 1.30.2, `policy.*`, DEFAULTS, 2 threads | the same |
@@ -17,7 +17,7 @@ and PIT files of both runs are in the same folder.
 | Random seeds | PIT generated the same 99 mutants in every run. jqwik used fresh random seeds in each run (a failing seed would be stored in `.jqwik-database`; there was none) | the same |
 
 The production code did not change between the freeze of the baseline (tag `baseline-suite`,
-commit `14f8d39`) and the measured commit in any class of the `policy`, `service`, `web`,
+commit `c1849be`) and the measured commit in any class of the `policy`, `service`, `web`,
 `security` or `domain` packages. A few lines of demo seed data changed, in `DemoDataSeeder` (both seeded referendum votes now go to the same option).
 Both suites were measured on the final code, in the same script run, one after the other.
 
@@ -99,3 +99,10 @@ suite. So for these two, the gain is "now also caught at unit level", not "now c
 | Real defects found by the baseline tests during development | 1 (the H2 CHECK constraint; see `docs/TEST_RESULTS.md`, section 8) |
 | PIT mutants additionally killed by the expanded suite | 4 |
 | Artificially seeded faults (hand-written faults injected to try the tests) | 0; none were injected |
+
+## Note on commit identifiers
+
+The commit messages of this repository were rewritten once after the measurements, which changed
+every commit identifier without changing any file. The identifiers in the documents were updated.
+The generated file `docs/evidence/ai-experiment/summary.md` still shows the identifier from the
+time of the run, `b0abee9`; it is the same source state as commit `0651f65` here.

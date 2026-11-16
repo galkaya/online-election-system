@@ -8,7 +8,7 @@
 | Tool and model | Claude Code (Anthropic), model Claude Fable 5.2 (`claude-fable-5-2`) |
 | How the prompt was used | The text below is the working instruction the assistant followed inside the same development session. It was **not** sent as a separate request to a fresh model instance. |
 | What the model could see | Everything in the session: the requirements, the production code, the complete baseline test suite and the baseline PIT report. The suggestions are therefore not independent of the baseline. |
-| Baseline frozen before the suggestions | Yes: Git tag `baseline-suite`, commit `14f8d39`. |
+| Baseline frozen before the suggestions | Yes: Git tag `baseline-suite`, commit `c1849be`. |
 | Token usage and cost | Not available in the session; not recorded. |
 | Reviewed by | The same assistant (accept/reject decisions and implementation). Review by the team members is pending. |
 
